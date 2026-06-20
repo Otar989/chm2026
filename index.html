@@ -407,8 +407,13 @@
   .fut-meta{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
   .fut-meta .fl{font-size:22px}
   .fut-club{font-size:10.5px;color:rgba(255,255,255,.7);font-weight:700}
-  .fut-av{margin:6px auto 4px;width:78px;height:78px;border-radius:50%;display:grid;place-items:center;font-size:40px;position:relative;z-index:1;
-    background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.18),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.18)}
+  .fut-av{margin:6px auto 4px;width:82px;height:82px;border-radius:50%;display:grid;place-items:center;font-size:40px;position:relative;z-index:1;overflow:hidden;
+    background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.18),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.28);box-shadow:0 6px 18px -6px rgba(0,0,0,.5)}
+  .fut-av.noimg{font-size:40px}
+  .fut-av img{width:100%;height:100%;object-fit:cover;object-position:50% 18%;display:block}
+  .fut-av-fl{position:absolute;right:-2px;bottom:-2px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;
+    font-size:14px;background:rgba(8,10,18,.78);border:1px solid rgba(255,255,255,.35);z-index:2}
+  .fut-av.noimg .fut-av-fl{display:none}
   .fut-name{text-align:center;font-weight:850;font-size:15px;letter-spacing:.3px;text-transform:uppercase;position:relative;z-index:1}
   .fut-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:5px 4px;margin:9px 0 8px;position:relative;z-index:1}
   .fut-stats div{text-align:center;background:rgba(0,0,0,.22);border-radius:8px;padding:5px 2px}
@@ -508,6 +513,8 @@
   .cr-top{display:flex;align-items:center;gap:14px}
   .cr-badge{width:62px;height:62px;border-radius:16px;display:grid;place-items:center;font-weight:900;font-size:19px;color:#3a2600;
     background:linear-gradient(135deg,#ffce54,#ffa726);flex:0 0 auto;box-shadow:0 10px 24px -8px rgba(255,206,84,.5)}
+  .cr-photo{width:74px;height:74px;border-radius:18px;object-fit:cover;object-position:50% 16%;flex:0 0 auto;
+    border:1px solid rgba(255,255,255,.28);box-shadow:0 10px 24px -8px rgba(0,0,0,.55)}
   .cr-id h3{font-size:18px;font-weight:850;display:flex;align-items:center;gap:8px}
   .cr-id h3 .fl{font-size:20px}
   .cr-sub{font-size:12.5px;color:var(--muted);margin-top:3px}
@@ -808,6 +815,7 @@
     <div class="sec-title">🎯 Игрок в фокусе: Криштиану Роналду</div>
     <div class="glass cr">
       <div class="cr-top">
+        <img class="cr-photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/President_Donald_Trump_meets_with_Cristiano_Ronaldo_in_the_Oval_Office_%2854933344262%29_%28cropped_and_rotated%29.jpg/500px-President_Donald_Trump_meets_with_Cristiano_Ronaldo_in_the_Oval_Office_%2854933344262%29_%28cropped_and_rotated%29.jpg" alt="Криштиану Роналду" loading="lazy" onerror="this.remove()">
         <div class="cr-badge">CR7</div>
         <div class="cr-id">
           <h3>Криштиану Роналду <span class="fl">🇵🇹</span></h3>
@@ -1180,52 +1188,52 @@ const FORM=[["Аргентина",["W"]],["Франция",["W"]],["Герман
 
 /* ===== star players (FUT-style cards). stats: СКР УДР ПАС ДРИ ЗАЩ ФИЗ ===== */
 const PLAYERS=[
- {n:"Мбаппе",fn:"Килиан Мбаппе",c:"Франция",p:"НАП",r:91,club:"Реал Мадрид",age:27,t:"gold",st:[97,90,82,92,36,78],
+ {n:"Мбаппе",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Picture_with_Mbapp%C3%A9_%28cropped_and_rotated%29.jpg/500px-Picture_with_Mbapp%C3%A9_%28cropped_and_rotated%29.jpg",fn:"Килиан Мбаппе",c:"Франция",p:"НАП",r:91,club:"Реал Мадрид",age:27,t:"gold",st:[97,90,82,92,36,78],
   note:"Ракета впереди: скорость плюс голы. Включается — и матч ломается.",
   nums:[["48","гола за Францию"],["27","лет"],["2018","чемпион мира"],["★","Реал Мадрид"]],
   how:"Главное оружие — взрывная скорость и хладнокровное завершение. Стартует слева, по диагонали врывается в штрафную и бьёт точно в угол. На пространстве почти неудержим: дай ему мяч и метр свободы — убежит от любого. Уже сейчас лидер сборной и её главный бомбардир.",
   fact:"Сделал хет-трик в финале ЧМ-2022 — и всё равно проиграл. В 2026-м идёт за реваншем."},
- {n:"Холанд",fn:"Эрлинг Холанд",c:"Норвегия",p:"НАП",r:91,club:"Ман Сити",age:25,t:"gold",st:[89,93,66,80,45,88],
+ {n:"Холанд",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Erling_Haaland_Morocco_v_Norway_7_June_2026-51.jpg/500px-Erling_Haaland_Morocco_v_Norway_7_June_2026-51.jpg",fn:"Эрлинг Холанд",c:"Норвегия",p:"НАП",r:91,club:"Ман Сити",age:25,t:"gold",st:[89,93,66,80,45,88],
   note:"Танк в штрафной. Дай ему полшанса — забьёт из любого положения.",
   nums:[["1-й","ЧМ в карьере"],["25","лет"],["★","Ман Сити"],["⚡","машина голов"]],
   how:"Чистый таран в штрафной: огромный, быстрый и невероятно результативный. Почти не участвует в розыгрыше — ждёт момент и убивает его в одно касание. Силён на втором этаже и в завершении прострелов. Вся игра Норвегии строится под него.",
   fact:"Это его дебютный чемпионат мира — Норвегия пробилась на турнир впервые за десятилетия."},
- {n:"Месси",fn:"Лионель Месси",c:"Аргентина",p:"ПФ",r:89,club:"Интер Майами",age:39,t:"icon",st:[80,89,91,94,33,64],
+ {n:"Месси",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Lionel_Messi_White_House_2026_%283x4_cropped%29.jpg/500px-Lionel_Messi_White_House_2026_%283x4_cropped%29.jpg",fn:"Лионель Месси",c:"Аргентина",p:"ПФ",r:89,club:"Интер Майами",age:39,t:"icon",st:[80,89,91,94,33,64],
   note:"Гений. Возможно, его последний чемпионат — такое не пропускают.",
   nums:[["2022","чемпион мира"],["39","лет"],["13","голов на ЧМ"],["🐐","легенда"]],
   how:"Мозг команды. Не бежит — думает быстрее всех. Видит пас, которого не видит никто, исполняет голы и штрафные, тащит партнёров. С возрастом отошёл чуть глубже, но в решающий момент по-прежнему решает исход.",
   fact:"Выиграл всё, что можно. ЧМ-2026 — почти наверняка его последний турнир за Аргентину."},
- {n:"Ямаль",fn:"Ламин Ямаль",c:"Испания",p:"ПВ",r:88,club:"Барселона",age:18,t:"special",st:[88,80,85,92,32,62],
+ {n:"Ямаль",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Lamine_Yamal_in_2025.jpg/500px-Lamine_Yamal_in_2025.jpg",fn:"Ламин Ямаль",c:"Испания",p:"ПВ",r:88,club:"Барселона",age:18,t:"special",st:[88,80,85,92,32,62],
   note:"18 лет — уже звезда. Это будущее футбола, и оно играет уже сейчас.",
   nums:[["18","лет"],["★","Барселона"],["10","номер Испании"],["🚀","вундеркинд"]],
   how:"Левша на правом фланге: смещается в центр и либо обводит, либо кладёт в дальний угол. Дриблинг, видение и наглость не по годам. Уже ключевой игрок сборной Испании в атаке.",
   fact:"В 18 лет — главная звезда Испании. Будущее мирового футбола играет уже сейчас."},
- {n:"Беллингем",fn:"Джуд Беллингем",c:"Англия",p:"ЦП",r:90,club:"Реал Мадрид",age:22,t:"gold",st:[80,86,87,88,78,82],
+ {n:"Беллингем",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/25th_Laureus_World_Sports_Awards_-_Red_Carpet_-_Jude_Bellingham_-_240422_190551-2_%28cropped%29.jpg/500px-25th_Laureus_World_Sports_Awards_-_Red_Carpet_-_Jude_Bellingham_-_240422_190551-2_%28cropped%29.jpg",fn:"Джуд Беллингем",c:"Англия",p:"ЦП",r:90,club:"Реал Мадрид",age:22,t:"gold",st:[80,86,87,88,78,82],
   note:"Мотор Англии: и забивает, и отдаёт, и отбирает. Делает всё.",
   nums:[["22","года"],["★","Реал Мадрид"],["B2B","бокс-ту-бокс"],["🏴","лидер Англии"]],
   how:"Универсал в центре: одинаково силён в атаке и обороне. Врывается в чужую штрафную и забивает, тут же возвращается отбирать мяч. Лидерские качества в таком возрасте — большая редкость.",
   fact:"В Реале с ходу стал звездой. В сборной Англии — главный двигатель команды."},
- {n:"Винисиус",fn:"Винисиус Жуниор",c:"Бразилия",p:"ЛФ",r:90,club:"Реал Мадрид",age:25,t:"gold",st:[95,84,80,93,29,68],
+ {n:"Винисиус",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/2023_05_06_Final_de_la_Copa_del_Rey_-_52879242230_%28cropped%29.jpg/500px-2023_05_06_Final_de_la_Copa_del_Rey_-_52879242230_%28cropped%29.jpg",fn:"Винисиус Жуниор",c:"Бразилия",p:"ЛФ",r:90,club:"Реал Мадрид",age:25,t:"gold",st:[95,84,80,93,29,68],
   note:"Дриблинг-шоу. На скорости проходит кого угодно один в один.",
   nums:[["25","лет"],["★","Реал Мадрид"],["1в1","король дриблинга"],["🇧🇷","Бразилия"]],
   how:"Крайний нападающий старой школы: берёт мяч на фланге и идёт в обводку на скорости. Непредсказуем, создаёт хаос в обороне соперника. Когда в ударе — честно его не остановить.",
   fact:"Один из самых быстрых и техничных вингеров мира. Главная надежда Бразилии в атаке."},
- {n:"Кейн",fn:"Харри Кейн",c:"Англия",p:"НАП",r:90,club:"Бавария",age:32,t:"gold",st:[68,93,84,82,47,83],
+ {n:"Кейн",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Harry_Kane_on_October_10%2C_2023.jpg/500px-Harry_Kane_on_October_10%2C_2023.jpg",fn:"Харри Кейн",c:"Англия",p:"НАП",r:90,club:"Бавария",age:32,t:"gold",st:[68,93,84,82,47,83],
   note:"Чистый бомбардир, который ещё и шикарно ассистирует.",
   nums:[["32","года"],["★","Бавария"],["68","голов за Англию"],["🎯","бомбардир"]],
   how:"Идеальный нападающий нового типа: и забивает, и созидает. Часто отходит в глубину, раздаёт пасы, а затем сам завершает атаку. Бьёт мощно и точно с любой дистанции.",
   fact:"Рекордный бомбардир сборной Англии. На ЧМ едет за первым большим трофеем в карьере."},
- {n:"Родри",fn:"Родри",c:"Испания",p:"ОП",r:90,club:"Ман Сити",age:29,t:"gold",st:[62,78,88,82,87,84],
+ {n:"Родри",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/RODRI_-_SWE_vs_ESP_-_UEFA_EURO_2020_QUALIFIERS_-_2019.10.15_%28cropped%29.jpg/500px-RODRI_-_SWE_vs_ESP_-_UEFA_EURO_2020_QUALIFIERS_-_2019.10.15_%28cropped%29.jpg",fn:"Родри",c:"Испания",p:"ОП",r:90,club:"Ман Сити",age:29,t:"gold",st:[62,78,88,82,87,84],
   note:"Дирижёр Испании. Без него команда играет вполовину силы.",
   nums:[["29","лет"],["★","Ман Сити"],["ЗМ-2024","Золотой мяч"],["🇪🇸","опорник №1"]],
   how:"Дирижёр в центре поля. Не эффектный, но незаменимый: читает игру, перехватывает, отдаёт точные пасы и держит структуру команды. Без него Испания теряет контроль над матчем.",
   fact:"Обладатель «Золотого мяча»-2024. Считается лучшим опорным полузащитником планеты."},
- {n:"Альварес",fn:"Хулиан Альварес",c:"Аргентина",p:"НАП",r:87,club:"Атлетико",age:26,t:"gold",st:[85,86,80,86,52,76],
+ {n:"Альварес",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Argentina_national_football_team_-_2_-_2022_%28Juli%C3%A1n_%C3%81lvarez%29.jpg/500px-Argentina_national_football_team_-_2_-_2022_%28Juli%C3%A1n_%C3%81lvarez%29.jpg",fn:"Хулиан Альварес",c:"Аргентина",p:"НАП",r:87,club:"Атлетико",age:26,t:"gold",st:[85,86,80,86,52,76],
   note:"Неутомимый и хитрый — забьёт ровно тогда, когда не ждёшь.",
   nums:[["26","лет"],["★","Атлетико"],["2022","чемпион мира"],["🇦🇷","Аргентина"]],
   how:"Неутомимый и умный форвард. Много двигается, прессингует, открывается в нужный момент. Не так ярок, как звёзды первой величины, но забивает важные голы и идеально дополняет Месси.",
   fact:"Стал чемпионом мира в 22 года. Теперь — один из лидеров атаки Аргентины."},
- {n:"Вирц",fn:"Флориан Вирц",c:"Германия",p:"АП",r:88,club:"Бавария",age:23,t:"gold",st:[82,82,88,90,55,70],
+ {n:"Вирц",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Florian_Wirtz%2C_2022-07-31%2C_Saisoner%C3%B6ffnung_Bayer_04%2C_Leverkusen_%281%29_%28cropped%29.jpg/500px-Florian_Wirtz%2C_2022-07-31%2C_Saisoner%C3%B6ffnung_Bayer_04%2C_Leverkusen_%281%29_%28cropped%29.jpg",fn:"Флориан Вирц",c:"Германия",p:"АП",r:88,club:"Бавария",age:23,t:"gold",st:[82,82,88,90,55,70],
   note:"Креатив Германии: пас, обводка, гол — всё через него.",
   nums:[["23","года"],["★","Бавария"],["10","креатив"],["🇩🇪","Германия"]],
   how:"Креативный мозг Германии. Находит свободные зоны между линиями, отдаёт разрезающие пасы, сам обыгрывает и забивает. Техника и видение поля — топ-уровень. Будущее немецкого футбола.",
@@ -2037,7 +2045,7 @@ function renderStars(){
         <div class="fut-rate"><b>${p.r}</b><span>${p.p}</span></div>
         <div class="fut-meta"><span class="fl">${fl(p.c)}</span><span class="fut-club">${p.club}</span></div>
       </div>
-      <div class="fut-av">${fl(p.c)}</div>
+      <div class="fut-av">${p.img?`<img src="${p.img}" alt="${p.fn||p.n}" loading="lazy" onerror="this.parentNode.classList.add('noimg');this.parentNode.textContent='${fl(p.c)}'">`:fl(p.c)}<span class="fut-av-fl">${fl(p.c)}</span></div>
       <div class="fut-name">${p.n}</div>
       <div class="fut-stats">${p.st.map((v,k)=>`<div><b>${v}</b><span>${STAT_LABELS[k]}</span></div>`).join('')}</div>
       <div class="fut-note">${p.note}</div>
@@ -2051,6 +2059,7 @@ function openPlayer(i){
   const p=PLAYERS[i]; if(!p)return;
   document.getElementById('pmBody').innerHTML=`
     <div class="cr-top">
+      ${p.img?`<img class="cr-photo" src="${p.img}" alt="${p.fn||p.n}" loading="lazy" onerror="this.remove()">`:''}
       <div class="cr-badge">${p.r}</div>
       <div class="cr-id">
         <h3>${p.fn||p.n} <span class="fl">${fl(p.c)}</span></h3>
