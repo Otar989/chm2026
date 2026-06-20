@@ -637,6 +637,9 @@
   .nm-meta{font-size:11.5px;color:var(--muted);margin-bottom:13px}
   .nm-img{width:100%;border-radius:14px;margin-bottom:13px;display:block}
   .nm-x{font-size:14px;line-height:1.65;color:var(--txt)}
+  #nmFull p{font-size:14px;line-height:1.7;color:var(--txt);margin-bottom:12px}
+  #nmFull p:first-child{font-size:15px}
+  .nm-loading{font-size:13px;color:var(--muted);padding:10px 0}
   .nm-link{display:inline-block;margin-top:15px;font-size:12.5px;font-weight:800;color:var(--accent);text-decoration:none}
   .nm-link:hover{text-decoration:underline}
 
@@ -1707,39 +1710,63 @@ async function translate(text){
   }catch(e){}
   return text;
 }
+function storyToParas(html){
+  return (html||'')
+    .replace(/<\/p>/gi,'\n\n')
+    .replace(/<[^>]+>/g,'')
+    .replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&nbsp;/g,' ').replace(/&mdash;/g,'—')
+    .split(/\n\n+/).map(s=>s.trim()).filter(s=>s.length>1);
+}
 async function openNews(i){
   const it=NEWS_VIEW[i]; if(!it)return;
   const body=document.getElementById('nmBody');
   body.innerHTML=`<span class="nm-cat" style="background:${CAT_COLOR[it.c]||'#9aa3bd'}">${it.c}</span>
     <h3 class="nm-h">${it.t||it.tEn||''}</h3>
-    <div class="nm-meta">${it.tag?it.tag+' · ':''}${it.when||''}</div>
+    <div class="nm-meta">${it.tag?it.tag+' · ':''}${it.when||''}${it.byline?' · '+it.byline:''}</div>
     ${it.img?`<img class="nm-img" src="${it.img}" alt="" loading="lazy">`:''}
-    <p class="nm-x" id="nmText">${it.x||it.xEn||''}</p>
-    ${it.href?`<a class="nm-link" href="${it.href}" target="_blank" rel="noopener">Открыть полностью на ESPN ↗</a>`:''}`;
+    <div class="nm-x" id="nmText">${it.x||it.xEn||''}</div>
+    <div id="nmFull"></div>
+    ${it.href?`<a class="nm-link" href="${it.href}" target="_blank" rel="noopener">Открыть оригинал на ESPN ↗</a>`:''}`;
   document.getElementById('newsModal').classList.add('show');
-  if(it.href && it.xEn && it.x===it.xEn){
-    const t=await translate(it.xEn);
-    const el=document.getElementById('nmText'); if(t&&el){it.x=t;el.textContent=t;}
+  const full=document.getElementById('nmFull');
+  if(!it.aid){ // no full-article id — translate the short text at least
+    if(it.xEn && it.x===it.xEn){const t=await translate(it.xEn);const el=document.getElementById('nmText');if(t&&el){it.x=t;el.textContent=t;}}
+    return;
   }
+  full.innerHTML='<div class="nm-loading">Загружаю полный текст…</div>';
+  try{
+    const j=await fetchJSON('https://content.core.api.espn.com/v1/sports/news/'+it.aid);
+    const story=j&&j.headlines&&j.headlines[0]&&j.headlines[0].story;
+    const paras=storyToParas(story);
+    if(!paras.length){full.innerHTML='';return;}
+    const sd=document.getElementById('nmText'); if(sd) sd.style.display='none';   // full text replaces short desc
+    full.innerHTML=paras.map((p,k)=>`<p id="np${k}">${p}</p>`).join('');          // English first
+    for(let k=0;k<paras.length;k++){                                              // translate progressively
+      const t=await translate(paras[k]); const el=document.getElementById('np'+k);
+      if(el&&t) el.textContent=t;
+      if(!document.getElementById('newsModal').classList.contains('show')) break; // user closed
+    }
+  }catch(e){ full.innerHTML=''; }
 }
 function closeNews(){document.getElementById('newsModal').classList.remove('show');}
-const NEWS_URL="https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/news";
+const NEWS_URL="https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/news?limit=50";
 async function fetchNews(){
   const status=document.getElementById('newsStatus');
   try{
     const j=await fetchJSON(NEWS_URL);
     const arts=(j.articles||[]).filter(a=>a.headline);
     if(!arts.length)throw 0;
-    LIVE_NEWS=arts.slice(0,20).map(a=>{
+    LIVE_NEWS=arts.slice(0,40).map(a=>{
       const img=((a.images||[]).find(im=>im.url)||{}).url||'';
-      return {c:categorize(a), tEn:a.headline, xEn:a.description||'', t:a.headline, x:a.description||'',
-        href:(a.links&&a.links.web&&a.links.web.href)||'', img,
+      return {c:categorize(a), aid:a.id, tEn:a.headline, xEn:a.description||'', t:a.headline, x:a.description||'',
+        href:(a.links&&a.links.web&&a.links.web.href)||'', img, byline:a.byline||'',
         when:a.published?relTime(a.published):'', tag:feedTag(a)};
     });
     if(status) status.innerHTML='<span class="dot-live"></span> live · обновлено '+new Date().toLocaleTimeString('ru-RU',{timeZone:MSK,hour:'2-digit',minute:'2-digit'})+' МСК';
     renderNews();
-    // translate headlines to Russian (cached, progressive)
-    for(const it of LIVE_NEWS){ it.t=await translate(it.tEn); }
+    // translate headlines to Russian (cached, progressive re-render)
+    let cnt=0;
+    for(const it of LIVE_NEWS){ it.t=await translate(it.tEn); if(++cnt%8===0) renderNews(); }
     renderNews();
   }catch(e){
     LIVE_NEWS=null;
