@@ -111,6 +111,60 @@
 
   /* ---------- Hero ---------- */
   .hero{margin-top:18px}
+
+  /* ===== cinematic promo / trailer ===== */
+  .promo{position:relative;margin-top:18px;border-radius:var(--radius);overflow:hidden;min-height:340px;display:flex;align-items:flex-end}
+  .promo-stage{position:absolute;inset:0;z-index:0}
+  .promo-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;will-change:opacity,transform;
+    animation:promoSlide 18s infinite cubic-bezier(.4,0,.2,1)}
+  .promo-slide.s1{background-image:url(promo1.jpg);animation-delay:0s}
+  .promo-slide.s2{background-image:url(promo2.jpg);animation-delay:-6s}
+  .promo-slide.s3{background-image:url(promo3.jpg);animation-delay:-12s}
+  @keyframes promoSlide{
+    0%{opacity:0;transform:scale(1.03)}
+    3%{opacity:1}
+    28%{opacity:1}
+    33%{opacity:0;transform:scale(1.12)}
+    100%{opacity:0;transform:scale(1.12)}
+  }
+  .promo-grad{position:absolute;inset:0;background:
+    linear-gradient(90deg,rgba(5,6,12,.92) 0%,rgba(5,6,12,.7) 38%,rgba(5,6,12,.25) 70%,rgba(5,6,12,.55) 100%),
+    linear-gradient(0deg,rgba(5,6,12,.85),rgba(5,6,12,0) 60%)}
+  .promo-content{position:relative;z-index:1;padding:26px 28px 24px;max-width:680px}
+  .promo-kicker{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
+    color:var(--accent);background:rgba(54,226,160,.14);border:1px solid rgba(54,226,160,.34);padding:5px 12px;border-radius:999px}
+  .promo-h{font-size:clamp(24px,4.6vw,40px);font-weight:900;line-height:1.05;letter-spacing:-.5px;margin:14px 0 14px;text-shadow:0 4px 24px rgba(0,0,0,.6)}
+  .promo-h em{font-style:normal;background:linear-gradient(120deg,var(--accent),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .promo-feats{position:relative;height:54px;margin-bottom:18px}
+  .pf{position:absolute;inset:0;font-size:14px;color:var(--muted);line-height:1.45;opacity:0;animation:promoFeat 18s infinite cubic-bezier(.4,0,.2,1)}
+  .pf b{color:var(--txt);font-weight:800}
+  .pf.f1{animation-delay:0s}.pf.f2{animation-delay:-6s}.pf.f3{animation-delay:-12s}
+  @keyframes promoFeat{
+    0%{opacity:0;transform:translateY(12px)}
+    4%{opacity:1;transform:translateY(0)}
+    28%{opacity:1;transform:translateY(0)}
+    33%{opacity:0;transform:translateY(-12px)}
+    100%{opacity:0;transform:translateY(-12px)}
+  }
+  .promo-cta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .promo-btn{cursor:pointer;font-weight:800;font-size:13px;padding:11px 18px;border-radius:13px;border:1px solid transparent;
+    background:linear-gradient(135deg,var(--accent),#7ef0c4);color:#06140e;transition:.2s}
+  .promo-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px -8px rgba(54,226,160,.6)}
+  .promo-btn.ghost{background:rgba(255,255,255,.08);color:var(--txt);border-color:var(--stroke);backdrop-filter:blur(8px)}
+  .promo-btn.ghost:hover{background:rgba(255,255,255,.16);box-shadow:none}
+  .promo-dots{display:flex;gap:7px;margin-left:auto}
+  .promo-dots i{width:24px;height:4px;border-radius:999px;background:rgba(255,255,255,.22);overflow:hidden;position:relative}
+  .promo-dots i::after{content:"";position:absolute;inset:0;background:var(--accent);transform:scaleX(0);transform-origin:left;animation:promoDot 18s infinite linear}
+  .promo-dots .d1::after{animation-delay:0s}.promo-dots .d2::after{animation-delay:-6s}.promo-dots .d3::after{animation-delay:-12s}
+  @keyframes promoDot{0%{transform:scaleX(0)}2%{transform:scaleX(0)}31%{transform:scaleX(1)}34%{transform:scaleX(1);opacity:1}35%{opacity:0}100%{transform:scaleX(1);opacity:0}}
+  @media(max-width:560px){
+    .promo{min-height:300px}
+    .promo-content{padding:20px 18px 18px;max-width:100%}
+    .promo-grad{background:linear-gradient(0deg,rgba(5,6,12,.92),rgba(5,6,12,.35) 70%,rgba(5,6,12,.5) 100%)}
+    .promo-feats{height:62px}
+    .promo-dots{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){.promo-slide,.pf,.promo-dots i::after{animation:none}.promo-slide.s1{opacity:1}.pf.f1{opacity:1}}
   .glass{background:var(--glass);border:1px solid var(--stroke);border-radius:var(--radius);
     backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);
     box-shadow:var(--shadow);position:relative;overflow:hidden}
@@ -719,6 +773,30 @@
 </nav>
 
 <div class="wrap">
+
+  <!-- PROMO (cinematic trailer, only on Обзор) -->
+  <div class="promo glass" id="promo">
+    <div class="promo-stage">
+      <div class="promo-slide s1"></div>
+      <div class="promo-slide s2"></div>
+      <div class="promo-slide s3"></div>
+      <div class="promo-grad"></div>
+    </div>
+    <div class="promo-content">
+      <div class="promo-kicker">⚽ ЧМ-2026 · твой штаб болельщика</div>
+      <h2 class="promo-h">Весь чемпионат мира — <em>в одном месте</em></h2>
+      <div class="promo-feats">
+        <div class="pf f1"><b>📊 Прогнозы и ставки.</b> Кто станет чемпионом, шансы сборных и на что лучше поставить.</div>
+        <div class="pf f2"><b>🔴 Живой матч.</b> Счёт по секундам, голы, карточки и статистика прямо в эфире.</div>
+        <div class="pf f3"><b>⭐ Звёзды и новости.</b> Профили игроков, новости на русском, таблицы и расписание.</div>
+      </div>
+      <div class="promo-cta">
+        <button class="promo-btn" data-v="live">🔴 Смотреть лайв</button>
+        <button class="promo-btn ghost" data-v="predict">🔮 Прогнозы</button>
+        <div class="promo-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div>
+      </div>
+    </div>
+  </div>
 
   <!-- HERO (only on Обзор) -->
   <div class="hero" id="hero">
@@ -2252,6 +2330,7 @@ function activate(v){
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v===v));
   document.querySelectorAll('.bnav').forEach(t=>t.classList.toggle('active',t.dataset.v===v));
   const hero=document.getElementById('hero'); if(hero) hero.style.display = v==='dash'?'':'none';
+  const promo=document.getElementById('promo'); if(promo) promo.style.display = v==='dash'?'':'none';
   renderSectionHero(v);
   if(v==='dash') animateDash();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -2293,6 +2372,7 @@ document.getElementById('nmClose').addEventListener('click',closeNews);
 document.getElementById('newsModal').addEventListener('click',e=>{if(e.target.id==='newsModal')closeNews();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePlayer();closeMatch();closeNews();}});
 document.getElementById('heroSide').addEventListener('click',()=>activate('predict'));
+document.getElementById('promo').addEventListener('click',e=>{const b=e.target.closest('.promo-btn');if(b)activate(b.dataset.v);});
 
 /* hero side card — title favourites */
 function renderHeroInfo(){
