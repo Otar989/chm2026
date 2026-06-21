@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ЧМ-2026 · Расписание, прогнозы и аналитика</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://site.api.espn.com https://content.core.api.espn.com https://api.mymemory.translated.net https://translate.googleapis.com https://api.allorigins.win https://corsproxy.io; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="description" content="Живой счёт, расписание, звёзды, прогнозы и новости Чемпионата мира 2026 — на русском, в одном месте.">
 <meta property="og:title" content="ЧМ-2026 · всё о турнире в одном месте">
 <meta property="og:description" content="Живой счёт, расписание, звёзды, прогнозы и новости Чемпионата мира 2026 — на русском.">
@@ -1481,12 +1483,16 @@ const tables   =()=>_LTABLES|| TABLES;
 const groupGoals=()=>_LGG   || GROUP_GOALS;
 const favForm  =()=>_LFORM  || FORM;
 
+/* security: escape any untrusted external string before it touches innerHTML */
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+/* allow only http(s) URLs (blocks javascript:, data:, etc.) */
+function safeUrl(u){u=String(u||'').trim();return /^https?:\/\//i.test(u)?u:'';}
 function resolveTeam(t){
   let ab=t.abbreviation;
   if(!TEAMS[ab]){const n=(t.displayName||t.name||"").toLowerCase();if(NAME2ABBR[n])ab=NAME2ABBR[n];}
   const e=TEAMS[ab];
   if(e)return {ru:e.ru,g:e.g,abbr:ab};
-  return {ru:t.shortDisplayName||t.displayName||ab||"—",g:"",abbr:ab||""};
+  return {ru:esc(t.shortDisplayName||t.displayName||ab||"—"),g:"",abbr:ab||""};
 }
 const TEAM_ID={};   // abbr -> ESPN team id (filled from live data)
 function parseEvents(json){
@@ -1504,7 +1510,7 @@ function parseEvents(json){
     const grp=(ht.g&&at.g&&ht.g===at.g)?ht.g:'';
     let city=(c.venue&&c.venue.address&&c.venue.address.city)||(c.venue&&c.venue.fullName)||'';
     city=city.split(',')[0].trim();
-    out.push({id:e.id,d:e.date,g:grp,h:ht.ru,a:at.ru,hAbbr:ht.abbr,aAbbr:at.abbr,v:cityRu(city),
+    out.push({id:e.id,d:e.date,g:grp,h:ht.ru,a:at.ru,hAbbr:ht.abbr,aAbbr:at.abbr,v:esc(cityRu(city)),
       state,hs:home.score,as:away.score,
       clock:state==='in'?((c.status&&c.status.displayClock)||tp.shortDetail||"LIVE"):'',
       winner:home.winner?'h':(away.winner?'a':null),
@@ -1667,6 +1673,16 @@ function confettiHTML(){
   return s;
 }
 let SND_ON=(()=>{try{return localStorage.getItem('wc_snd')!=='0'}catch(e){return true}})();
+/* favourite teams + goal notifications */
+let FAV_TEAMS=(()=>{try{return new Set(JSON.parse(localStorage.getItem('wc_fav')||'[]'))}catch(e){return new Set()}})();
+let NOTIF_ON=(()=>{try{return localStorage.getItem('wc_notif')==='1'}catch(e){return false}})();
+function favSave(){try{localStorage.setItem('wc_fav',JSON.stringify([...FAV_TEAMS]))}catch(e){}}
+function toggleFav(ru){if(!ru)return;FAV_TEAMS.has(ru)?FAV_TEAMS.delete(ru):FAV_TEAMS.add(ru);favSave();renderTables();}
+function notifyGoal(team,score){
+  if(!NOTIF_ON||!('Notification'in window)||Notification.permission!=='granted')return;
+  try{const n=new Notification('⚽ ГОЛ! '+team,{body:team+' забивает · счёт '+score,icon:'https://otar989.github.io/chm2026/promo1.jpg',tag:'wc-goal'});
+    n.onclick=()=>{try{window.focus()}catch(e){}n.close();};}catch(e){}
+}
 function playGoal(){
   if(!SND_ON)return;
   try{
@@ -1909,7 +1925,7 @@ function renderNews(){
       const meta=n.when?`<div class="nmeta">${n.tag?n.tag+' · ':''}${n.when}${n.href?' · читать →':''}</div>`:'';
       return `<div class="glass ncard${n.href?' clk':''}" data-ni="${i}">
         <span class="ncat" style="background:${CAT_COLOR[n.c]||'#9aa3bd'}">${n.c}</span>
-        <h4>${n.t}</h4>${n.x?`<p>${n.x}</p>`:''}${meta}</div>`;
+        <h4>${esc(n.t)}</h4>${n.x?`<p>${esc(n.x)}</p>`:''}${meta}</div>`;
     }).join('') : `<div class="glass note">В этой категории сейчас нет новостей — выбери «Все».</div>`;
   }
 }
@@ -1947,13 +1963,14 @@ function storyToParas(html){
 async function openNews(i){
   const it=NEWS_VIEW[i]; if(!it)return;
   const body=document.getElementById('nmBody');
+  const _img=esc(safeUrl(it.img)), _href=esc(safeUrl(it.href));
   body.innerHTML=`<span class="nm-cat" style="background:${CAT_COLOR[it.c]||'#9aa3bd'}">${it.c}</span>
-    <h3 class="nm-h">${it.t||it.tEn||''}</h3>
-    <div class="nm-meta">${it.tag?it.tag+' · ':''}${it.when||''}${it.byline?' · '+it.byline:''}</div>
-    ${it.img?`<img class="nm-img" src="${it.img}" alt="" loading="lazy">`:''}
-    <div class="nm-x" id="nmText">${it.x||it.xEn||''}</div>
+    <h3 class="nm-h">${esc(it.t||it.tEn||'')}</h3>
+    <div class="nm-meta">${it.tag?esc(it.tag)+' · ':''}${esc(it.when||'')}${it.byline?' · '+esc(it.byline):''}</div>
+    ${_img?`<img class="nm-img" src="${_img}" alt="" loading="lazy">`:''}
+    <div class="nm-x" id="nmText">${esc(it.x||it.xEn||'')}</div>
     <div id="nmFull"></div>
-    ${it.href?`<a class="nm-link" href="${it.href}" target="_blank" rel="noopener">Открыть оригинал на ESPN ↗</a>`:''}`;
+    ${_href?`<a class="nm-link" href="${_href}" target="_blank" rel="noopener noreferrer">Открыть оригинал на ESPN ↗</a>`:''}`;
   document.getElementById('newsModal').classList.add('show');
   const full=document.getElementById('nmFull');
   if(!it.aid){ // no full-article id — translate the short text at least
@@ -1967,7 +1984,7 @@ async function openNews(i){
     const paras=storyToParas(story);
     if(!paras.length){full.innerHTML='';return;}
     const sd=document.getElementById('nmText'); if(sd) sd.style.display='none';   // full text replaces short desc
-    full.innerHTML=paras.map((p,k)=>`<p id="np${k}">${p}</p>`).join('');          // English first
+    full.innerHTML=paras.map((p,k)=>`<p id="np${k}">${esc(p)}</p>`).join('');        // English first
     for(let k=0;k<paras.length;k++){                                              // translate progressively
       const t=await translate(paras[k]); const el=document.getElementById('np'+k);
       if(el&&t) el.textContent=t;
@@ -1997,9 +2014,9 @@ async function openTeam(ru){
       const nm=a.displayName||(a.athlete&&a.athlete.displayName)||'';
       const jr=a.jersey||(a.athlete&&a.athlete.jersey)||'';
       if(nm)groups[key].push({nm,jr});});
-    let html=`<div class="tm-meta">${coach?`<span>👔 Тренер: <b>${coach}</b></span>`:''}${rec?`<span>📊 ${rec}</span>`:''}<span>👥 ${ath.length} игроков</span></div>`;
+    let html=`<div class="tm-meta">${coach?`<span>👔 Тренер: <b>${esc(coach)}</b></span>`:''}${rec?`<span>📊 ${esc(rec)}</span>`:''}<span>👥 ${ath.length} игроков</span></div>`;
     Object.entries(groups).forEach(([k,arr])=>{ if(!arr.length)return;
-      html+=`<div class="tm-pos">${k} · ${arr.length}</div><div class="tm-players">`+arr.map(p=>`<div class="tm-pl"><span class="tm-num">${p.jr}</span>${p.nm}</div>`).join('')+`</div>`;});
+      html+=`<div class="tm-pos">${k} · ${arr.length}</div><div class="tm-players">`+arr.map(p=>`<div class="tm-pl"><span class="tm-num">${esc(p.jr)}</span>${esc(p.nm)}</div>`).join('')+`</div>`;});
     inb().innerHTML=html;
   }catch(e){inb().innerHTML='<div class="glass note">Не удалось загрузить состав.</div>';}
 }
@@ -2161,7 +2178,7 @@ function lineupCol(r){
   if(!r||!(r.roster||[]).length)return'<div class="lu-empty">состав не объявлен</div>';
   const st=(r.roster||[]).filter(p=>p.starter);
   return `<div class="lu-form">схема ${r.formation||'—'}</div>`+st.map(p=>
-    `<div class="lu-row"><span class="lu-num">${p.jersey||''}</span><span class="lu-nm">${(p.athlete&&p.athlete.displayName)||''}</span><span class="lu-pos">${posRu(p.position&&p.position.abbreviation)}</span></div>`).join('');
+    `<div class="lu-row"><span class="lu-num">${esc(p.jersey||'')}</span><span class="lu-nm">${esc((p.athlete&&p.athlete.displayName)||'')}</span><span class="lu-pos">${posRu(p.position&&p.position.abbreviation)}</span></div>`).join('');
 }
 async function loadMatchDetail(m){
   const box=document.getElementById('mmDetail'); if(!box)return;
@@ -2177,8 +2194,8 @@ async function loadMatchDetail(m){
     // key events (Russian, with player names + assist, filtered, newest first)
     const evs=(j.keyEvents||[]).map(e=>{
       const map=evRu((e.type&&(e.type.text||e.type.abbreviation))||''); if(!map)return null;
-      let who=evWho(e,map[2]);
-      if(map[2]==='goal'){const am=(e.text||'').match(/assist(?:ed)? by\s+([^.,]+?)(?:\s+with|\.|,|$)/i); if(am)who+=` <span class="ev2-as">(пас: ${am[1].trim()})</span>`;}
+      let who=esc(evWho(e,map[2]));
+      if(map[2]==='goal'){const am=(e.text||'').match(/assist(?:ed)? by\s+([^.,]+?)(?:\s+with|\.|,|$)/i); if(am)who+=` <span class="ev2-as">(пас: ${esc(am[1].trim())})</span>`;}
       return {ic:map[0],ru:map[1],kind:map[2],side:idSide[e.team&&e.team.id]||'h',
         min:(e.clock&&e.clock.displayValue)||'', who};
     }).filter(Boolean);
@@ -2189,7 +2206,7 @@ async function loadMatchDetail(m){
     // "what's happening now" — latest commentary line (translated)
     const comm=j.commentary||[]; let nowTx='';
     if(comm.length){let last=comm[0];comm.forEach(c=>{if((c.sequence||0)>=(last.sequence||0))last=c;});nowTx=(last&&last.text)||'';}
-    const nowHTML = nowTx?`<div class="pitch-now" id="pitchNow">📣 ${nowTx}</div>`:'';
+    const nowHTML = nowTx?`<div class="pitch-now" id="pitchNow">📣 ${esc(nowTx)}</div>`:'';
     // stats
     const stat=(ti,name)=>{const s=((teams[ti]||{}).statistics||[]).find(x=>x.name===name);return s?s.displayValue:null;};
     const rows=[['possessionPct','Владение, %'],['totalShots','Удары'],['shotsOnTarget','В створ'],['wonCorners','Угловые'],['foulsCommitted','Фолы'],['yellowCards','Жёлтые карточки'],['totalPasses','Передачи']];
@@ -2209,12 +2226,12 @@ async function loadMatchDetail(m){
     const h2hHTML = h2hg.length? `<details class="mm-acc"><summary>🆚 Очные встречи</summary>`+h2hg.slice(0,8).map(g=>{
       const yr=(g.gameDate||'').slice(0,4);
       const sc=g.homeTeamId===hid?`${g.homeTeamScore}:${g.awayTeamScore}`:`${g.awayTeamScore}:${g.homeTeamScore}`;
-      return `<div class="h2h-row"><span class="h2h-y">${yr}</span><span class="h2h-sc">${fl(m.h)} ${sc} ${fl(m.a)}</span><span class="h2h-l">${g.leagueName||g.competitionName||''}</span></div>`;
+      return `<div class="h2h-row"><span class="h2h-y">${esc(yr)}</span><span class="h2h-sc">${fl(m.h)} ${esc(sc)} ${fl(m.a)}</span><span class="h2h-l">${esc(g.leagueName||g.competitionName||'')}</span></div>`;
     }).join('')+`</details>`:'';
     // commentary feed (newest first, translated)
     const commLines=(j.commentary||[]).slice().sort((a,b)=>(b.sequence||0)-(a.sequence||0)).slice(0,16);
     const commHTML = commLines.length? `<details class="mm-acc"><summary>📝 Трансляция по минутам</summary><div class="comm">`+commLines.map((x,i)=>
-      `<div class="comm-row"><span class="comm-min">${(x.time&&x.time.displayValue)||'·'}</span><span class="comm-tx" id="cm${i}">${x.text||''}</span></div>`).join('')+`</div></details>`:'';
+      `<div class="comm-row"><span class="comm-min">${esc((x.time&&x.time.displayValue)||'·')}</span><span class="comm-tx" id="cm${i}">${esc(x.text||'')}</span></div>`).join('')+`</div></details>`:'';
 
     box.innerHTML = pitchHTML(m,hs,as,evs) + nowHTML + evHTML + statHTML + lineupHTML + h2hHTML + commHTML;
     // translate live caption + commentary (cached)
@@ -2446,7 +2463,7 @@ async function buildScorers(){
   }));
   const topS=Object.values(S).sort((a,b)=>b.c-a.c).slice(0,15);
   const topA=Object.values(A).sort((a,b)=>b.c-a.c).slice(0,10);
-  const row=(p,i)=>`<div class="sc-row"><span class="sc-rk ${i===0?'top':''}">${i+1}</span><span class="sc-fl">${flT(p.tid)}</span><span class="sc-nm">${p.n}</span><span class="sc-c">${p.c}</span></div>`;
+  const row=(p,i)=>`<div class="sc-row"><span class="sc-rk ${i===0?'top':''}">${i+1}</span><span class="sc-fl">${flT(p.tid)}</span><span class="sc-nm">${esc(p.n)}</span><span class="sc-c">${p.c}</span></div>`;
   box.innerHTML=`<div class="cards-2"><div class="glass sc-card"><h4>⚽ Бомбардиры</h4>${topS.length?topS.map(row).join(''):'<div class="glass note">Голов пока нет.</div>'}</div>`+
     `<div class="glass sc-card"><h4>🅰️ Ассистенты</h4>${topA.length?topA.map(row).join(''):'<div class="glass note">Данных по ассистам пока мало.</div>'}</div></div>`;
 }
