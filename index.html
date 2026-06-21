@@ -1503,7 +1503,7 @@ function matchHTML(m){
     mid= score?`<div class="score">${score}</div><span class="badge b-fin">Завершён</span>`
               :`<div class="ko">FT</div><span class="badge b-fin">Завершён</span>`;
   }else{
-    mid=`<div class="ko">${etTime(m.d)}</div><span class="badge b-soon">Скоро</span>`;
+    mid=`<div class="ko">${etTime(m.d)}</div><span class="badge b-soon ko-cd" data-cd="${new Date(m.d).getTime()}">${fmtCountdown(new Date(m.d)-Date.now())}</span>`;
   }
   const hb=m.winner==='h'?' style="opacity:1;font-weight:850"':'', ab=m.winner==='a'?' style="opacity:1;font-weight:850"':'';
   const grp=m.g?('Гр. '+m.g+' · '):'';
@@ -1788,11 +1788,21 @@ function trSave(){try{localStorage.setItem('wc_tr',JSON.stringify(TR_CACHE))}cat
 async function translate(text){
   if(!text)return text;
   if(TR_CACHE[text])return TR_CACHE[text];
+  const src=text.slice(0,1800);
+  // 1) Google translate (free gtx endpoint) — reliable + high quality, via proxy fallback
+  try{
+    const u='https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ru&dt=t&q='+encodeURIComponent(src);
+    const j=await fetchJSON(u);
+    if(Array.isArray(j)&&Array.isArray(j[0])){
+      const t=j[0].map(s=>s&&s[0]).filter(Boolean).join('');
+      if(t&&t.trim()){TR_CACHE[text]=t;trSave();return t;}
+    }
+  }catch(e){}
+  // 2) MyMemory fallback
   try{
     const r=await fetch('https://api.mymemory.translated.net/get?langpair=en|ru&q='+encodeURIComponent(text.slice(0,480)));
-    if(!r.ok)throw 0; const j=await r.json();
-    const t=j&&j.responseData&&j.responseData.translatedText;
-    if(t&&!/MYMEMORY|LIMIT|INVALID|PLEASE SELECT/i.test(t)){TR_CACHE[text]=t;trSave();return t;}
+    if(r.ok){const j=await r.json();const t=j&&j.responseData&&j.responseData.translatedText;
+      if(t&&!/MYMEMORY|LIMIT|INVALID|PLEASE SELECT/i.test(t)){TR_CACHE[text]=t;trSave();return t;}}
   }catch(e){}
   return text;
 }
@@ -2386,6 +2396,14 @@ function renderHeroInfo(){
       <span class="hf-pct">${f[1]}%</span>
     </div>`).join('');
 }
+// countdown formatter: "Ч:ММ:СС" (<24ч) or "N дн H ч"
+function fmtCountdown(ms){
+  if(ms<=0) return 'скоро';
+  const s=Math.floor(ms/1000), d=Math.floor(s/86400), h=Math.floor(s%86400/3600), m=Math.floor(s%3600/60), sec=s%60;
+  const p=n=>String(n).padStart(2,'0');
+  if(d>=1) return `${d} дн ${h} ч`;
+  return `${h}:${p(m)}:${p(sec)}`;
+}
 /* hero live/next-match strip */
 function renderHeroLive(){
   const el=document.getElementById('heroLive'); if(!el)return;
@@ -2403,12 +2421,10 @@ function renderHeroLive(){
   const now=new Date();
   const next=FX.filter(m=>new Date(m.d)>now).sort((a,b)=>new Date(a.d)-new Date(b.d))[0];
   if(next){
-    const diff=new Date(next.d)-now, hrs=Math.floor(diff/3600000), mins=Math.floor(diff%3600000/60000);
-    const inTxt=hrs>24?`${Math.floor(hrs/24)} дн`:(hrs>0?`через ${hrs} ч ${mins} мин`:`через ${mins} мин`);
     el.className='hero-live';
-    el.innerHTML=`<span class="hl-tag">⏱ след. матч</span>`+
+    el.innerHTML=`<span class="hl-tag">⏱ до матча</span>`+
       `<span class="hl-m">${fl(next.h)} ${next.h} — ${next.a} ${fl(next.a)}</span>`+
-      `<span class="hl-c">${inTxt}</span>`;
+      `<span class="hl-c cd" data-cd="${new Date(next.d).getTime()}">${fmtCountdown(new Date(next.d)-Date.now())}</span>`;
   }else{el.className='hero-live';el.innerHTML='';}
 }
 /* clock */
@@ -2432,6 +2448,9 @@ fetchNews();                       // pull live ESPN headlines
 function tickClock(){
   document.querySelectorAll('.lc-min[data-key],.hl-c[data-key]').forEach(el=>{
     const m=MATCH_REG[el.dataset.key]; if(m) el.textContent=liveClockStr(m);
+  });
+  document.querySelectorAll('[data-cd]').forEach(el=>{
+    el.textContent=fmtCountdown(+el.dataset.cd-Date.now());
   });
 }
 setInterval(tickClock,1000);
