@@ -690,6 +690,10 @@
   .ev2-tx{font-size:13px;flex:1;min-width:0}
   .ev2-tx b{font-weight:800}
   .ev2-fl{font-size:17px;flex:0 0 auto}
+  .ev2.period{background:transparent;opacity:.7;justify-content:center;padding:4px 11px}
+  .ev2.period .ev2-tx{flex:0 0 auto}
+  .ev2.period .ev2-tx b{font-weight:700;color:var(--muted)}
+  .ev2.period .ev2-min{color:var(--muted)}
 
   /* news detail modal + clickable cards */
   .ncard.clk{cursor:pointer}
@@ -1940,6 +1944,12 @@ function evRu(type){
   if(t.includes('yellow'))return['🟨','Жёлтая карточка','card'];
   if(t.includes('substitution'))return['🔁','Замена','sub'];
   if(t.includes('var')||t.includes('review'))return['📺','Проверка VAR','var'];
+  if(/delay/.test(t))return null;                                   // noise — drop
+  if(/half[- ]?time/.test(t))return['⏸','Перерыв','period'];
+  if(/2nd half|second half|start 2nd/.test(t))return['▶️','Второй тайм','period'];
+  if(/kick ?-?off|first half|start 1st|match begins|1st half/.test(t))return['🟢','Начало матча','period'];
+  if(/full[- ]?time|end regular|final whistle|match ends|end 2nd|end of/.test(t))return['🏁','Финальный свисток','period'];
+  if(/penalt(y|ies) shootout|shoot-?out/.test(t))return['🥅','Серия пенальти','period'];
   return null;
 }
 const shortName=s=>{const p=(s||'').trim().split(/\s+/);return p[p.length-1]||'';};
@@ -2007,7 +2017,7 @@ async function loadMatchDetail(m){
     }).filter(Boolean);
     const evHTML = evs.length
       ? `<div class="mm-sec">Голы и ключевые события</div>`+evs.slice().reverse().map(e=>
-          `<div class="ev2 ${e.kind}"><span class="ev2-min">${e.min}</span><span class="ev2-ic">${e.ic}</span><span class="ev2-tx"><b>${e.ru}</b>${e.who?' — <span class="ev2-who">'+e.who+'</span>':''}</span><span class="ev2-fl">${e.side==='h'?fl(m.h):fl(m.a)}</span></div>`).join('')
+          `<div class="ev2 ${e.kind}"><span class="ev2-min">${e.min}</span><span class="ev2-ic">${e.ic}</span><span class="ev2-tx"><b>${e.ru}</b>${e.who?' — <span class="ev2-who">'+e.who+'</span>':''}</span>${e.kind==='period'?'':'<span class="ev2-fl">'+(e.side==='h'?fl(m.h):fl(m.a))+'</span>'}</div>`).join('')
       : `<div class="mm-sec">События</div><div class="glass note">Ключевых событий пока нет — следи за матчем.</div>`;
     // "what's happening now" — latest commentary line (translated)
     const comm=j.commentary||[]; let nowTx='';
