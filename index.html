@@ -1862,7 +1862,7 @@ async function fetchNews(){
     renderNews();
     // translate headlines to Russian (cached, progressive re-render)
     let cnt=0;
-    for(const it of LIVE_NEWS){ it.t=await translate(it.tEn); if(++cnt%8===0) renderNews(); }
+    for(const it of LIVE_NEWS){ it.t=await translate(it.tEn); if(it.xEn) it.x=await translate(it.xEn); if(++cnt%5===0) renderNews(); }
     renderNews();
   }catch(e){
     LIVE_NEWS=null;
