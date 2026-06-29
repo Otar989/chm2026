@@ -761,6 +761,36 @@
   .sc-fl{font-size:19px;flex:0 0 auto}
   .sc-nm{flex:1;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .sc-c{font-weight:850;font-size:15px;color:var(--gold);flex:0 0 auto}
+  /* real knockout bracket */
+  .ko-wrap{display:flex;gap:14px;overflow-x:auto;padding:4px 2px 14px;-webkit-overflow-scrolling:touch}
+  .ko-wrap::-webkit-scrollbar{height:8px}
+  .ko-wrap::-webkit-scrollbar-thumb{background:var(--stroke);border-radius:99px}
+  .ko-col{flex:0 0 auto;width:188px;display:flex;flex-direction:column}
+  .ko-rh{font-size:11.5px;font-weight:850;letter-spacing:.4px;text-transform:uppercase;color:var(--accent);
+    text-align:center;padding:8px;margin-bottom:10px;border-radius:10px;background:var(--glass-2);border:1px solid var(--stroke-soft);position:sticky;top:0}
+  .ko-rh small{display:inline-block;margin-left:5px;color:var(--muted);font-weight:700}
+  .ko-matches{flex:1;display:flex;flex-direction:column;justify-content:space-around;gap:10px}
+  .ko-card{background:var(--glass);border:1px solid var(--stroke-soft);border-radius:13px;padding:8px 9px;
+    box-shadow:var(--shadow);transition:transform .18s,border-color .18s}
+  .ko-card.clk{cursor:pointer}
+  .ko-card.clk:hover{transform:translateY(-2px);border-color:var(--accent)}
+  .ko-card.islive{border-color:#ff5470;box-shadow:0 0 0 1px rgba(255,84,112,.4)}
+  .ko-tm{display:flex;align-items:center;gap:7px;padding:5px 4px;border-radius:8px;font-size:12.5px;font-weight:700}
+  .ko-tm.win{background:linear-gradient(90deg,rgba(54,226,160,.16),transparent);box-shadow:inset 2px 0 0 var(--accent2)}
+  .ko-tm.win .ko-nm{font-weight:850}
+  .ko-tm.ph{opacity:.5;font-weight:600}
+  .ko-fl{font-size:17px;flex:0 0 auto;width:20px;text-align:center}
+  .ko-dot{display:inline-block;width:9px;height:9px;border-radius:50%;border:1.5px dashed var(--muted)}
+  .ko-nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ko-sc{flex:0 0 auto;font-weight:850;font-size:14px;min-width:14px;text-align:right}
+  .ko-meta{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid var(--stroke-soft)}
+  .ko-badge{font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:99px;background:var(--glass-2);color:var(--muted);border:1px solid var(--stroke-soft)}
+  .ko-badge.live{background:rgba(255,84,112,.18);color:#ff8fa3;border-color:rgba(255,84,112,.4);animation:pulseLive 1.4s infinite}
+  .ko-badge.fin{color:var(--accent2)}
+  @keyframes pulseLive{0%,100%{opacity:1}50%{opacity:.45}}
+  .ko-v{font-size:9.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ko-third{margin-top:16px;max-width:240px}
+  .ko-third .ko-rh{position:static}
   /* bracket simulator */
   .brk-round{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:12px;text-align:center}
   .brk-pair{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-bottom:8px}
@@ -1124,6 +1154,11 @@
       <div class="sec-title">Бомбардиры и ассистенты</div>
       <p class="lead">Считается вживую из сыгранных матчей ESPN (имена — из протоколов). Первый расчёт занимает пару секунд.</p>
       <div id="scorers"></div>
+    </div>
+    <div id="tablesBracket" style="display:none">
+      <div class="sec-title">Сетка плей-офф</div>
+      <p class="lead">Путь к титулу: от 1/16 финала до решающего матча. Счёт и победители подтягиваются автоматически; прокрути вправо, чтобы увидеть поздние стадии. Нажми на матч — детали.</p>
+      <div id="koBracket"></div>
     </div>
   </section>
 
@@ -1648,6 +1683,7 @@ async function fetchLive(){
     LIVE_OK=true;LAST_UPDATE=new Date();
     checkGoals(_LFIX.filter(m=>stateKey(m)==='live'));
     renderSchedule();renderTables();renderDashboard();renderInsights();renderPredictExtra();renderLive();renderHeroLive();
+    if(TABLES_VIEW==='ko')renderKoBracket();
     if(document.getElementById('view-dash').classList.contains('active'))animateDash();
     setStatusPill();
     refreshLiveDetails();
@@ -2490,15 +2526,61 @@ function brkAdvance(){
   else{BRK.teams=winners;BRK.round++;BRK.picks={};}
   brkRender();
 }
-/* ===== tables tab: groups | scorers ===== */
+/* ===== real knockout bracket (built from fixtures) ===== */
+const KO_ROUNDS=[["round-of-32","1/16 финала"],["round-of-16","1/8 финала"],["quarterfinals","1/4 финала"],["semifinals","1/2 финала"],["final","Финал"]];
+const koRound=m=>m.round||m.r||"";
+function koScore(m){ if(m.state) return [m.hs,m.as]; return m.s||null; }
+function koWinner(m){
+  if(m.winner) return m.winner;
+  const s=koScore(m); if(s&&+s[0]!==+s[1]) return +s[0]>+s[1]?'h':'a';
+  return null;
+}
+const koPlace=n=>!F[n]; // not a real country flag → placeholder slot
+function koTeamRow(name,side,sc,win){
+  const isWin=win===side, ph=koPlace(name);
+  return `<div class="ko-tm${isWin?' win':''}${ph?' ph':''}">`+
+    `<span class="ko-fl">${ph?'<span class="ko-dot"></span>':fl(name)}</span>`+
+    `<span class="ko-nm">${name}</span>`+
+    `<span class="ko-sc">${(sc!==''&&sc!=null)?sc:''}</span></div>`;
+}
+function koCard(m){
+  const s=koScore(m), win=koWinner(m), k=stateKey(m);
+  const real=!koPlace(m.h)&&!koPlace(m.a);
+  const clk=(real||s)?' clk':'';
+  if(real||s){MATCH_REG[matchKey(m)]=m;}
+  let badge='';
+  if(k==='live') badge='<span class="ko-badge live">● LIVE</span>';
+  else if(s) badge='<span class="ko-badge fin">FT</span>';
+  else if(k==='soon') badge='<span class="ko-badge">'+etTime(m.d)+'</span>';
+  return `<div class="ko-card${k==='live'?' islive':''}${clk}" data-key="${matchKey(m)}">`+
+    koTeamRow(m.h,'h',s?s[0]:'',win)+
+    koTeamRow(m.a,'a',s?s[1]:'',win)+
+    `<div class="ko-meta">${badge}${m.v?'<span class="ko-v">'+m.v+'</span>':''}</div>`+
+  `</div>`;
+}
+function renderKoBracket(){
+  const box=document.getElementById('koBracket'); if(!box) return;
+  const FX=fixtures();
+  const cols=KO_ROUNDS.map(([slug,lbl])=>({lbl,ms:FX.filter(m=>koRound(m)===slug).sort((a,b)=>new Date(a.d)-new Date(b.d))})).filter(c=>c.ms.length);
+  if(!cols.length){box.innerHTML='<div class="glass note">Сетка плей-офф появится после старта 1/16 финала.</div>';return;}
+  const third=FX.find(m=>koRound(m)==='3rd-place-match');
+  const colsHTML=cols.map(c=>
+    `<div class="ko-col"><div class="ko-rh">${c.lbl}<small>${c.ms.length}</small></div>`+
+    `<div class="ko-matches">${c.ms.map(koCard).join('')}</div></div>`).join('');
+  box.innerHTML=`<div class="ko-wrap">${colsHTML}</div>`+
+    (third?`<div class="ko-third"><div class="ko-rh">🥉 Матч за 3-е место</div>${koCard(third)}</div>`:'');
+}
+/* ===== tables tab: groups | ko | scorers ===== */
 let TABLES_VIEW='groups', SCORERS_BUILT=false;
 function renderTablesChips(){
   const el=document.getElementById('tablesChips'); if(!el)return;
-  el.innerHTML=[['groups','Таблицы групп'],['scorers','⚽ Бомбардиры']].map(([k,l])=>
+  el.innerHTML=[['groups','Таблицы групп'],['ko','🏆 Плей-офф'],['scorers','⚽ Бомбардиры']].map(([k,l])=>
     `<button class="chip ${k===TABLES_VIEW?'on':''}" data-tv="${k}">${l}</button>`).join('');
   document.getElementById('tablesGroups').style.display = TABLES_VIEW==='groups'?'':'none';
   document.getElementById('tablesScorers').style.display = TABLES_VIEW==='scorers'?'':'none';
+  document.getElementById('tablesBracket').style.display = TABLES_VIEW==='ko'?'':'none';
   if(TABLES_VIEW==='scorers'&&!SCORERS_BUILT){SCORERS_BUILT=true;buildScorers();}
+  if(TABLES_VIEW==='ko')renderKoBracket();
 }
 async function buildScorers(){
   const box=document.getElementById('scorers'); if(!box)return;
@@ -2674,7 +2756,7 @@ function renderSectionHero(v){
     news:{k:'📰 Новости',t:'Что происходит на ЧМ',s:'Свежие новости на русском по категориям, обновляются автоматически.',st:[[(LIVE_NEWS||NEWS).length,'новостей'],[NEWS_CATS.length-1,'категорий'],[LIVE_NEWS?'live':'снимок','источник']]},
     predict:{k:'🔮 Прогнозы',t:'Кто выиграет и на что ставить',s:'Шансы на титул, сетка плей-офф и прогноз счёта на каждый матч.',st:[[FAVS[0][0],'фаворит'],[FAVS[0][1]+'%','шанс на титул'],[BRACKET[0].n,'мой чемпион']]},
     bets:{k:'🎯 Ставки',t:'Аналитика и советы',s:'Что я бы поставил: от надёжных опор до смелых лонгшотов. 18+, играй ответственно.',st:[[MYBETS.length,'идей в корзине'],[BETS.length,'прогнозов'],['100','ед. банка']]},
-    tables:{k:'📊 Таблицы',t:'Положение в группах',s:'Очки и разница мячей — считаются вживую из реальных результатов.',st:[[12,'групп'],[2,'выходят дальше'],[leaderA,'лидер гр. A']]}
+    tables:{k:'📊 Таблицы',t:'Таблицы, сетка и бомбардиры',s:'Группы, сетка плей-офф и гонка бомбардиров — всё считается вживую из реальных результатов.',st:[[12,'групп'],['1/16','стадия плей-офф'],[leaderA,'лидер гр. A']]}
   };
   const c=cfg[v]; if(!c){el.innerHTML='';return;}
   el.innerHTML=`<div class="glass sec-hero">
@@ -2731,7 +2813,7 @@ document.getElementById('pmClose').addEventListener('click',closePlayer);
 document.getElementById('playerModal').addEventListener('click',e=>{if(e.target.id==='playerModal')closePlayer();});
 // match detail modal — any match card opens it
 document.addEventListener('click',e=>{
-  const card=e.target.closest('.match.clk, .live-card.clk'); if(card&&card.dataset.key){openMatch(card.dataset.key);}
+  const card=e.target.closest('.match.clk, .live-card.clk, .ko-card.clk'); if(card&&card.dataset.key){openMatch(card.dataset.key);}
 });
 document.getElementById('mmClose').addEventListener('click',closeMatch);
 document.getElementById('matchModal').addEventListener('click',e=>{if(e.target.id==='matchModal')closeMatch();});
