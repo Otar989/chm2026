@@ -761,36 +761,62 @@
   .sc-fl{font-size:19px;flex:0 0 auto}
   .sc-nm{flex:1;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .sc-c{font-weight:850;font-size:15px;color:var(--gold);flex:0 0 auto}
-  /* real knockout bracket */
-  .ko-wrap{display:flex;gap:14px;overflow-x:auto;padding:4px 2px 14px;-webkit-overflow-scrolling:touch}
-  .ko-wrap::-webkit-scrollbar{height:8px}
-  .ko-wrap::-webkit-scrollbar-thumb{background:var(--stroke);border-radius:99px}
-  .ko-col{flex:0 0 auto;width:188px;display:flex;flex-direction:column}
-  .ko-rh{font-size:11.5px;font-weight:850;letter-spacing:.4px;text-transform:uppercase;color:var(--accent);
-    text-align:center;padding:8px;margin-bottom:10px;border-radius:10px;background:var(--glass-2);border:1px solid var(--stroke-soft);position:sticky;top:0}
-  .ko-rh small{display:inline-block;margin-left:5px;color:var(--muted);font-weight:700}
-  .ko-matches{flex:1;display:flex;flex-direction:column;justify-content:space-around;gap:10px}
-  .ko-card{background:var(--glass);border:1px solid var(--stroke-soft);border-radius:13px;padding:8px 9px;
+  /* real knockout bracket — symmetric, final in centre */
+  #koBracket{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  @media(min-width:1080px){#koBracket{width:94vw;position:relative;left:50%;transform:translateX(-50%)}}
+  #koBracket::-webkit-scrollbar{height:8px}
+  #koBracket::-webkit-scrollbar-thumb{background:var(--stroke);border-radius:99px}
+  .bk-stage{display:flex;align-items:stretch;width:max-content;margin:0 auto;padding:6px 4px 18px;min-height:560px}
+  .bk{display:flex;flex:0 0 auto}
+  .bk-col{display:flex;flex-direction:column;width:150px;flex:0 0 auto;padding:0 11px}
+  .bk-clbl{font-size:10px;font-weight:850;letter-spacing:.3px;text-transform:uppercase;color:var(--accent);
+    text-align:center;padding:5px;margin-bottom:6px;border-radius:8px;background:var(--glass-2);border:1px solid var(--stroke-soft)}
+  .bk-list{flex:1;display:flex;flex-direction:column}
+  .bk-m{flex:1;display:flex;flex-direction:column;justify-content:center;position:relative;padding:3px 0;min-height:54px}
+  /* centre */
+  .bk-center{display:flex;flex-direction:column;align-items:center;justify-content:center;width:188px;flex:0 0 auto;padding:0 4px}
+  .bk-trophy{font-size:42px;filter:drop-shadow(0 6px 16px rgba(255,206,84,.55));margin-bottom:4px}
+  .bk-flbl{font-size:13px;font-weight:850;color:var(--gold);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+  .bk-final{width:100%}
+  .bk-final .ko-card{border-color:var(--gold);box-shadow:0 0 0 1px rgba(255,206,84,.4),var(--shadow)}
+  .bk-third{width:100%;margin-top:18px;opacity:.95}
+  .bk-tlbl{font-size:9.5px;font-weight:800;color:var(--muted);text-align:center;text-transform:uppercase;margin-bottom:5px}
+  /* connector lines (CSS-only) */
+  .bk.left .bk-col:not(:last-child) .bk-m:nth-child(odd)::after,
+  .bk.right .bk-col:not(:first-child) .bk-m:nth-child(odd)::after{
+    content:"";position:absolute;top:50%;height:100%;width:11px;border:2px solid rgba(54,226,160,.5)}
+  .bk.left .bk-col:not(:last-child) .bk-m:nth-child(odd)::after{left:100%;border-left:0;border-radius:0 7px 7px 0}
+  .bk.right .bk-col:not(:first-child) .bk-m:nth-child(odd)::after{right:100%;border-right:0;border-radius:7px 0 0 7px}
+  .bk.left .bk-col:not(:first-child) .bk-m::before,
+  .bk.left .bk-col:last-child .bk-m::after,
+  .bk.right .bk-col:not(:last-child) .bk-m::before,
+  .bk.right .bk-col:first-child .bk-m::after{
+    content:"";position:absolute;top:50%;width:11px;height:2px;background:rgba(54,226,160,.5)}
+  .bk.left .bk-col:not(:first-child) .bk-m::before{right:100%}
+  .bk.left .bk-col:last-child .bk-m::after{left:100%}
+  .bk.right .bk-col:not(:last-child) .bk-m::before{left:100%}
+  .bk.right .bk-col:first-child .bk-m::after{right:100%}
+  /* shared match-card styles */
+  .ko-card{background:var(--glass);border:1px solid var(--stroke-soft);border-radius:11px;padding:6px 8px;
     box-shadow:var(--shadow);transition:transform .18s,border-color .18s}
   .ko-card.clk{cursor:pointer}
   .ko-card.clk:hover{transform:translateY(-2px);border-color:var(--accent)}
   .ko-card.islive{border-color:#ff5470;box-shadow:0 0 0 1px rgba(255,84,112,.4)}
-  .ko-tm{display:flex;align-items:center;gap:7px;padding:5px 4px;border-radius:8px;font-size:12.5px;font-weight:700}
-  .ko-tm.win{background:linear-gradient(90deg,rgba(54,226,160,.16),transparent);box-shadow:inset 2px 0 0 var(--accent2)}
+  .ko-card.empty{opacity:.45;border-style:dashed}
+  .ko-tm{display:flex;align-items:center;gap:6px;padding:3px 3px;border-radius:7px;font-size:12px;font-weight:700}
+  .ko-tm.win{background:linear-gradient(90deg,rgba(54,226,160,.18),transparent);box-shadow:inset 2px 0 0 var(--accent2)}
   .ko-tm.win .ko-nm{font-weight:850}
   .ko-tm.ph{opacity:.5;font-weight:600}
-  .ko-fl{font-size:17px;flex:0 0 auto;width:20px;text-align:center}
-  .ko-dot{display:inline-block;width:9px;height:9px;border-radius:50%;border:1.5px dashed var(--muted)}
+  .ko-fl{font-size:16px;flex:0 0 auto;width:19px;text-align:center}
+  .ko-dot{display:inline-block;width:8px;height:8px;border-radius:50%;border:1.5px dashed var(--muted)}
   .ko-nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .ko-sc{flex:0 0 auto;font-weight:850;font-size:14px;min-width:14px;text-align:right}
-  .ko-meta{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid var(--stroke-soft)}
-  .ko-badge{font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:99px;background:var(--glass-2);color:var(--muted);border:1px solid var(--stroke-soft)}
+  .ko-sc{flex:0 0 auto;font-weight:850;font-size:13.5px;min-width:13px;text-align:right}
+  .ko-meta{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:5px;padding-top:5px;border-top:1px solid var(--stroke-soft)}
+  .ko-badge{font-size:9px;font-weight:800;padding:1px 6px;border-radius:99px;background:var(--glass-2);color:var(--muted);border:1px solid var(--stroke-soft)}
   .ko-badge.live{background:rgba(255,84,112,.18);color:#ff8fa3;border-color:rgba(255,84,112,.4);animation:pulseLive 1.4s infinite}
   .ko-badge.fin{color:var(--accent2)}
   @keyframes pulseLive{0%,100%{opacity:1}50%{opacity:.45}}
-  .ko-v{font-size:9.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .ko-third{margin-top:16px;max-width:240px}
-  .ko-third .ko-rh{position:static}
+  .ko-v{font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px}
   /* bracket simulator */
   .brk-round{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:12px;text-align:center}
   .brk-pair{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-bottom:8px}
@@ -1157,7 +1183,7 @@
     </div>
     <div id="tablesBracket" style="display:none">
       <div class="sec-title">Сетка плей-офф</div>
-      <p class="lead">Путь к титулу: от 1/16 финала до решающего матча. Счёт и победители подтягиваются автоматически; прокрути вправо, чтобы увидеть поздние стадии. Нажми на матч — детали.</p>
+      <p class="lead">Классическая сетка: 1/16 финала по краям сходятся к финалу с кубком в центре. Счёт и победители подтягиваются автоматически по ходу турнира. Нажми на матч — детали.</p>
       <div id="koBracket"></div>
     </div>
   </section>
@@ -2526,8 +2552,7 @@ function brkAdvance(){
   else{BRK.teams=winners;BRK.round++;BRK.picks={};}
   brkRender();
 }
-/* ===== real knockout bracket (built from fixtures) ===== */
-const KO_ROUNDS=[["round-of-32","1/16 финала"],["round-of-16","1/8 финала"],["quarterfinals","1/4 финала"],["semifinals","1/2 финала"],["final","Финал"]];
+/* ===== real knockout bracket (symmetric, final in centre) ===== */
 const koRound=m=>m.round||m.r||"";
 function koScore(m){ if(m.state) return [m.hs,m.as]; return m.s||null; }
 function koWinner(m){
@@ -2535,15 +2560,16 @@ function koWinner(m){
   const s=koScore(m); if(s&&+s[0]!==+s[1]) return +s[0]>+s[1]?'h':'a';
   return null;
 }
-const koPlace=n=>!F[n]; // not a real country flag → placeholder slot
+const koPlace=n=>!n||!F[n]; // not a real country flag → placeholder slot
 function koTeamRow(name,side,sc,win){
   const isWin=win===side, ph=koPlace(name);
   return `<div class="ko-tm${isWin?' win':''}${ph?' ph':''}">`+
     `<span class="ko-fl">${ph?'<span class="ko-dot"></span>':fl(name)}</span>`+
-    `<span class="ko-nm">${name}</span>`+
+    `<span class="ko-nm">${name||'—'}</span>`+
     `<span class="ko-sc">${(sc!==''&&sc!=null)?sc:''}</span></div>`;
 }
 function koCard(m){
+  if(!m) return `<div class="ko-card empty">${koTeamRow('','h','',null)}${koTeamRow('','a','',null)}</div>`;
   const s=koScore(m), win=koWinner(m), k=stateKey(m);
   const real=!koPlace(m.h)&&!koPlace(m.a);
   const clk=(real||s)?' clk':'';
@@ -2552,23 +2578,50 @@ function koCard(m){
   if(k==='live') badge='<span class="ko-badge live">● LIVE</span>';
   else if(s) badge='<span class="ko-badge fin">FT</span>';
   else if(k==='soon') badge='<span class="ko-badge">'+etTime(m.d)+'</span>';
+  const meta=(badge||m.v)?`<div class="ko-meta">${badge}${m.v?'<span class="ko-v">'+m.v+'</span>':''}</div>`:'';
   return `<div class="ko-card${k==='live'?' islive':''}${clk}" data-key="${matchKey(m)}">`+
     koTeamRow(m.h,'h',s?s[0]:'',win)+
-    koTeamRow(m.a,'a',s?s[1]:'',win)+
-    `<div class="ko-meta">${badge}${m.v?'<span class="ko-v">'+m.v+'</span>':''}</div>`+
+    koTeamRow(m.a,'a',s?s[1]:'',win)+meta+
   `</div>`;
+}
+// bracket structure by ESPN event id (stable for WC2026); ids ordered so pairs feed the next round
+const KO_BR={
+  left:[
+    {lbl:'1/16 финала',ids:[760486,760488,760487,760490,760496,760497,760494,760495]},
+    {lbl:'1/8 финала', ids:[760502,760503,760506,760507]},
+    {lbl:'1/4 финала', ids:[760510,760511]},
+    {lbl:'1/2 финала', ids:[760514]}
+  ],
+  right:[
+    {lbl:'1/2 финала', ids:[760515]},
+    {lbl:'1/4 финала', ids:[760512,760513]},
+    {lbl:'1/8 финала', ids:[760504,760505,760509,760508]},
+    {lbl:'1/16 финала',ids:[760489,760491,760492,760493,760499,760501,760498,760500]}
+  ],
+  final:760517, third:760516
+};
+let KO_BYID={};
+function koCol(c){
+  return `<div class="bk-col"><div class="bk-clbl">${c.lbl}</div><div class="bk-list">`+
+    c.ids.map(id=>`<div class="bk-m">${koCard(KO_BYID[id])}</div>`).join('')+`</div></div>`;
 }
 function renderKoBracket(){
   const box=document.getElementById('koBracket'); if(!box) return;
-  const FX=fixtures();
-  const cols=KO_ROUNDS.map(([slug,lbl])=>({lbl,ms:FX.filter(m=>koRound(m)===slug).sort((a,b)=>new Date(a.d)-new Date(b.d))})).filter(c=>c.ms.length);
-  if(!cols.length){box.innerHTML='<div class="glass note">Сетка плей-офф появится после старта 1/16 финала.</div>';return;}
-  const third=FX.find(m=>koRound(m)==='3rd-place-match');
-  const colsHTML=cols.map(c=>
-    `<div class="ko-col"><div class="ko-rh">${c.lbl}<small>${c.ms.length}</small></div>`+
-    `<div class="ko-matches">${c.ms.map(koCard).join('')}</div></div>`).join('');
-  box.innerHTML=`<div class="ko-wrap">${colsHTML}</div>`+
-    (third?`<div class="ko-third"><div class="ko-rh">🥉 Матч за 3-е место</div>${koCard(third)}</div>`:'');
+  const FX=fixtures(); KO_BYID={}; FX.forEach(m=>{if(m.id)KO_BYID[m.id]=m;});
+  if(!FX.some(m=>koRound(m))){box.innerHTML='<div class="glass note">Сетка плей-офф появится после старта 1/16 финала.</div>';return;}
+  const fin=KO_BYID[KO_BR.final], third=KO_BYID[KO_BR.third];
+  box.innerHTML=
+    `<div class="bk-stage">`+
+      `<div class="bk left">${KO_BR.left.map(koCol).join('')}</div>`+
+      `<div class="bk-center">`+
+        `<div class="bk-trophy">🏆</div>`+
+        `<div class="bk-flbl">Финал</div>`+
+        `<div class="bk-final">${koCard(fin)}</div>`+
+        (third?`<div class="bk-third"><div class="bk-tlbl">🥉 Матч за 3-е место</div>${koCard(third)}</div>`:'')+
+      `</div>`+
+      `<div class="bk right">${KO_BR.right.map(koCol).join('')}</div>`+
+    `</div>`;
+  box.scrollLeft=Math.max(0,(box.scrollWidth-box.clientWidth)/2);
 }
 /* ===== tables tab: groups | ko | scorers ===== */
 let TABLES_VIEW='groups', SCORERS_BUILT=false;
