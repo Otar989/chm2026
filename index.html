@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ЧМ-2026 · Расписание, прогнозы и аналитика</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://site.api.espn.com https://content.core.api.espn.com https://api.mymemory.translated.net https://translate.googleapis.com https://api.allorigins.win https://corsproxy.io; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="description" content="Живой счёт, расписание, звёзды, прогнозы и новости Чемпионата мира 2026 — на русском, в одном месте.">
+<meta property="og:title" content="ЧМ-2026 · всё о турнире в одном месте">
+<meta property="og:description" content="Живой счёт, расписание, звёзды, прогнозы и новости Чемпионата мира 2026 — на русском.">
+<meta property="og:image" content="https://otar989.github.io/chm2026/promo1.jpg">
+<meta property="og:url" content="https://otar989.github.io/chm2026/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://otar989.github.io/chm2026/promo1.jpg">
 <style>
   :root{
     --bg:#05060c;
@@ -69,6 +79,8 @@
     background:var(--glass);border:1px solid var(--stroke);font-weight:600}
   .dot-live{width:8px;height:8px;border-radius:50%;background:var(--live);box-shadow:0 0 0 0 rgba(255,77,109,.6);animation:pulse 1.6s infinite}
   .dot-on{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);vertical-align:middle}
+  .ic-btn{cursor:pointer;font-size:13px;line-height:1;padding:6px 9px}
+  .ic-btn:hover{border-color:var(--stroke);background:var(--glass-2)}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,77,109,.55)}70%{box-shadow:0 0 0 9px rgba(255,77,109,0)}100%{box-shadow:0 0 0 0 rgba(255,77,109,0)}}
 
   /* ---------- Tabs ---------- */
@@ -111,6 +123,60 @@
 
   /* ---------- Hero ---------- */
   .hero{margin-top:18px}
+
+  /* ===== cinematic promo / trailer ===== */
+  .promo{position:relative;margin-top:18px;border-radius:var(--radius);overflow:hidden;min-height:340px;display:flex;align-items:flex-end}
+  .promo-stage{position:absolute;inset:0;z-index:0}
+  .promo-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;will-change:opacity,transform;
+    animation:promoSlide 18s infinite cubic-bezier(.4,0,.2,1)}
+  .promo-slide.s1{background-image:url(promo1.jpg);animation-delay:0s}
+  .promo-slide.s2{background-image:url(promo2.jpg);animation-delay:-6s}
+  .promo-slide.s3{background-image:url(promo3.jpg);animation-delay:-12s}
+  @keyframes promoSlide{
+    0%{opacity:0;transform:scale(1.03)}
+    3%{opacity:1}
+    28%{opacity:1}
+    33%{opacity:0;transform:scale(1.12)}
+    100%{opacity:0;transform:scale(1.12)}
+  }
+  .promo-grad{position:absolute;inset:0;background:
+    linear-gradient(90deg,rgba(5,6,12,.92) 0%,rgba(5,6,12,.7) 38%,rgba(5,6,12,.25) 70%,rgba(5,6,12,.55) 100%),
+    linear-gradient(0deg,rgba(5,6,12,.85),rgba(5,6,12,0) 60%)}
+  .promo-content{position:relative;z-index:1;padding:26px 28px 24px;max-width:680px}
+  .promo-kicker{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
+    color:var(--accent);background:rgba(54,226,160,.14);border:1px solid rgba(54,226,160,.34);padding:5px 12px;border-radius:999px}
+  .promo-h{font-size:clamp(24px,4.6vw,40px);font-weight:900;line-height:1.05;letter-spacing:-.5px;margin:14px 0 14px;text-shadow:0 4px 24px rgba(0,0,0,.6)}
+  .promo-h em{font-style:normal;background:linear-gradient(120deg,var(--accent),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .promo-feats{position:relative;height:54px;margin-bottom:18px}
+  .pf{position:absolute;inset:0;font-size:14px;color:var(--muted);line-height:1.45;opacity:0;animation:promoFeat 18s infinite cubic-bezier(.4,0,.2,1)}
+  .pf b{color:var(--txt);font-weight:800}
+  .pf.f1{animation-delay:0s}.pf.f2{animation-delay:-6s}.pf.f3{animation-delay:-12s}
+  @keyframes promoFeat{
+    0%{opacity:0;transform:translateY(12px)}
+    4%{opacity:1;transform:translateY(0)}
+    28%{opacity:1;transform:translateY(0)}
+    33%{opacity:0;transform:translateY(-12px)}
+    100%{opacity:0;transform:translateY(-12px)}
+  }
+  .promo-cta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .promo-btn{cursor:pointer;font-weight:800;font-size:13px;padding:11px 18px;border-radius:13px;border:1px solid transparent;
+    background:linear-gradient(135deg,var(--accent),#7ef0c4);color:#06140e;transition:.2s}
+  .promo-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px -8px rgba(54,226,160,.6)}
+  .promo-btn.ghost{background:rgba(255,255,255,.08);color:var(--txt);border-color:var(--stroke);backdrop-filter:blur(8px)}
+  .promo-btn.ghost:hover{background:rgba(255,255,255,.16);box-shadow:none}
+  .promo-dots{display:flex;gap:7px;margin-left:auto}
+  .promo-dots i{width:24px;height:4px;border-radius:999px;background:rgba(255,255,255,.22);overflow:hidden;position:relative}
+  .promo-dots i::after{content:"";position:absolute;inset:0;background:var(--accent);transform:scaleX(0);transform-origin:left;animation:promoDot 18s infinite linear}
+  .promo-dots .d1::after{animation-delay:0s}.promo-dots .d2::after{animation-delay:-6s}.promo-dots .d3::after{animation-delay:-12s}
+  @keyframes promoDot{0%{transform:scaleX(0)}2%{transform:scaleX(0)}31%{transform:scaleX(1)}34%{transform:scaleX(1);opacity:1}35%{opacity:0}100%{transform:scaleX(1);opacity:0}}
+  @media(max-width:560px){
+    .promo{min-height:300px}
+    .promo-content{padding:20px 18px 18px;max-width:100%}
+    .promo-grad{background:linear-gradient(0deg,rgba(5,6,12,.92),rgba(5,6,12,.35) 70%,rgba(5,6,12,.5) 100%)}
+    .promo-feats{height:62px}
+    .promo-dots{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){.promo-slide,.pf,.promo-dots i::after{animation:none}.promo-slide.s1{opacity:1}.pf.f1{opacity:1}}
   .glass{background:var(--glass);border:1px solid var(--stroke);border-radius:var(--radius);
     backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);
     box-shadow:var(--shadow);position:relative;overflow:hidden}
@@ -636,6 +702,82 @@
   .ev2-tx{font-size:13px;flex:1;min-width:0}
   .ev2-tx b{font-weight:800}
   .ev2-fl{font-size:17px;flex:0 0 auto}
+  .ev2.period{background:transparent;opacity:.7;justify-content:center;padding:4px 11px}
+  .ev2.period .ev2-tx{flex:0 0 auto}
+  .ev2.period .ev2-tx b{font-weight:700;color:var(--muted)}
+  .ev2.period .ev2-min{color:var(--muted)}
+  .ev2-as{color:var(--muted);font-weight:600}
+  /* collapsible accordions in match modal */
+  .mm-acc{margin-top:14px;border:1px solid var(--stroke-soft);border-radius:14px;overflow:hidden;background:var(--glass)}
+  .mm-acc>summary{cursor:pointer;list-style:none;padding:13px 15px;font-size:13px;font-weight:800;color:var(--txt);display:flex;align-items:center;justify-content:space-between}
+  .mm-acc>summary::-webkit-details-marker{display:none}
+  .mm-acc>summary::after{content:"▾";color:var(--muted);font-size:12px;transition:transform .2s}
+  .mm-acc[open]>summary::after{transform:rotate(180deg)}
+  .mm-acc>*:not(summary){padding:0 15px 13px}
+  /* lineups */
+  .lineups{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:560px){.lineups{grid-template-columns:1fr}}
+  .lu-team{font-weight:800;font-size:13px;margin-bottom:8px}
+  .lu-form{font-size:11px;color:var(--accent);font-weight:700;margin-bottom:8px}
+  .lu-row{display:flex;align-items:center;gap:9px;padding:4px 0;font-size:12.5px}
+  .lu-num{width:22px;text-align:center;color:var(--muted);font-weight:800;flex:0 0 auto}
+  .lu-nm{flex:1;font-weight:650}
+  .lu-pos{font-size:10px;color:var(--muted);font-weight:700;flex:0 0 auto}
+  .lu-empty{font-size:12px;color:var(--muted);padding:4px 0}
+  /* h2h */
+  .h2h-row{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:12.5px;border-top:1px solid var(--stroke-soft)}
+  .h2h-row:first-of-type{border-top:none}
+  .h2h-y{color:var(--muted);font-weight:700;width:38px;flex:0 0 auto}
+  .h2h-sc{font-weight:800;flex:1}
+  .h2h-l{font-size:10.5px;color:var(--muted);text-align:right}
+  /* commentary */
+  .comm{display:flex;flex-direction:column;gap:2px;max-height:300px;overflow-y:auto}
+  .comm-row{display:flex;gap:10px;padding:6px 0;border-top:1px solid var(--stroke-soft);font-size:12.5px;line-height:1.45}
+  .comm-row:first-child{border-top:none}
+  .comm-min{color:var(--gold);font-weight:800;min-width:38px;flex:0 0 auto}
+  .comm-tx{color:var(--txt)}
+  /* team profile */
+  .tm-clk{cursor:pointer}
+  .tm-clk:hover{color:var(--accent)}
+  .tm-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+  .tm-fl{font-size:46px;line-height:1}
+  .tm-id h3{font-size:20px;font-weight:850}
+  .tm-sub{font-size:12.5px;color:var(--muted);margin-top:3px}
+  .tm-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .tm-meta span{font-size:12px;color:var(--muted);background:var(--glass-2);border:1px solid var(--stroke-soft);border-radius:999px;padding:5px 11px}
+  .tm-meta b{color:var(--txt)}
+  .tm-pos{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--accent);font-weight:800;margin:14px 0 8px}
+  .tm-players{display:grid;grid-template-columns:1fr 1fr;gap:5px 12px}
+  @media(max-width:560px){.tm-players{grid-template-columns:1fr}}
+  .tm-pl{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:650;padding:3px 0}
+  .tm-num{width:24px;text-align:center;color:var(--muted);font-weight:800;flex:0 0 auto}
+  /* scorers */
+  .sc-card{padding:16px}
+  .sc-card h4{font-size:13px;font-weight:850;margin-bottom:10px}
+  .sc-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--stroke-soft);font-size:13.5px}
+  .sc-row:first-of-type{border-top:none}
+  .sc-rk{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-size:11px;font-weight:850;background:var(--glass-2);border:1px solid var(--stroke-soft);flex:0 0 auto}
+  .sc-rk.top{background:linear-gradient(135deg,var(--gold),#ffa726);color:#3a2600;border:none}
+  .sc-fl{font-size:19px;flex:0 0 auto}
+  .sc-nm{flex:1;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sc-c{font-weight:850;font-size:15px;color:var(--gold);flex:0 0 auto}
+  /* bracket simulator */
+  .brk-round{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:12px;text-align:center}
+  .brk-pair{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-bottom:8px}
+  .brk-team{display:flex;align-items:center;gap:8px;padding:11px 13px;border-radius:12px;cursor:pointer;font-weight:700;font-size:13.5px;
+    background:var(--glass-2);border:1px solid var(--stroke-soft);color:var(--txt);transition:.18s;min-width:0}
+  .brk-team .fl{font-size:20px;flex:0 0 auto}
+  .brk-team .bt-nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brk-team.r{justify-content:flex-end;text-align:right}
+  .brk-team:hover{border-color:var(--accent)}
+  .brk-team.win{background:linear-gradient(135deg,rgba(54,226,160,.22),rgba(54,226,160,.08));border-color:var(--accent)}
+  .brk-team.lose{opacity:.4}
+  .brk-vs{font-size:10px;color:var(--muted);font-weight:800}
+  .brk-next{width:100%;margin-top:10px;text-align:center;justify-content:center}
+  .brk-champ{text-align:center;padding:14px 0}
+  .brk-tro{font-size:60px;filter:drop-shadow(0 8px 24px rgba(255,206,84,.5))}
+  .brk-clbl{font-size:11px;letter-spacing:1px;color:var(--muted);font-weight:800;margin-top:6px}
+  .brk-cnm{font-size:24px;font-weight:900;margin:6px 0 16px}
 
   /* news detail modal + clickable cards */
   .ncard.clk{cursor:pointer}
@@ -700,6 +842,8 @@
     </div>
     <div class="top-meta">
       <span class="pill" id="updPill"><span class="dot-live"></span> подключение…</span>
+      <button class="pill ic-btn" id="sndBtn" title="Звук гола вкл/выкл">🔊</button>
+      <button class="pill ic-btn" id="shareBtn" title="Поделиться">🔗</button>
       <span class="pill" id="clock">--:--</span>
     </div>
   </div>
@@ -719,6 +863,30 @@
 </nav>
 
 <div class="wrap">
+
+  <!-- PROMO (cinematic trailer, only on Обзор) -->
+  <div class="promo glass" id="promo">
+    <div class="promo-stage">
+      <div class="promo-slide s1"></div>
+      <div class="promo-slide s2"></div>
+      <div class="promo-slide s3"></div>
+      <div class="promo-grad"></div>
+    </div>
+    <div class="promo-content">
+      <div class="promo-kicker">⚽ ЧМ-2026 · твой штаб болельщика</div>
+      <h2 class="promo-h">Весь чемпионат мира — <em>в одном месте</em></h2>
+      <div class="promo-feats">
+        <div class="pf f1"><b>📊 Прогнозы и ставки.</b> Кто станет чемпионом, шансы сборных и на что лучше поставить.</div>
+        <div class="pf f2"><b>🔴 Живой матч.</b> Счёт по секундам, голы, карточки и статистика прямо в эфире.</div>
+        <div class="pf f3"><b>⭐ Звёзды и новости.</b> Профили игроков, новости на русском, таблицы и расписание.</div>
+      </div>
+      <div class="promo-cta">
+        <button class="promo-btn" data-v="live">🔴 Смотреть лайв</button>
+        <button class="promo-btn ghost" data-v="predict">🔮 Прогнозы</button>
+        <div class="promo-dots"><i class="d1"></i><i class="d2"></i><i class="d3"></i></div>
+      </div>
+    </div>
+  </div>
 
   <!-- HERO (only on Обзор) -->
   <div class="hero" id="hero">
@@ -893,6 +1061,10 @@
     <div class="sec-title">Мой прогноз на плей-офф</div>
     <div class="cards-2" id="bracket"></div>
 
+    <div class="sec-title">🏆 Симулятор: собери своего чемпиона</div>
+    <p class="lead">Топ-16 сборных по силе. Выбирай победителя каждой пары и пройди путь до титула.</p>
+    <div class="glass odds-card" id="bracketSim"></div>
+
     <div class="sec-title">Гонка бомбардиров</div>
     <div class="glass odds-card"><div id="boot"></div></div>
 
@@ -940,10 +1112,18 @@
 
   <!-- TABLES -->
   <section class="view" id="view-tables">
-    <div class="sec-title">Таблицы групп · финальные</div>
-    <div id="tables"></div>
-    <div class="legend glass" style="padding:12px 15px">
-      <span><i style="background:var(--accent)"></i>Зелёным — зона выхода в плей-офф (топ-2 группы + лучшие третьи)</span>
+    <div class="chips" id="tablesChips"></div>
+    <div id="tablesGroups">
+      <div class="sec-title">Таблицы групп · финальные</div>
+      <div id="tables"></div>
+      <div class="legend glass" style="padding:12px 15px">
+        <span><i style="background:var(--accent)"></i>Зелёным — зона выхода в плей-офф (топ-2 группы + лучшие третьи). Нажми на команду — состав и тренер.</span>
+      </div>
+    </div>
+    <div id="tablesScorers" style="display:none">
+      <div class="sec-title">Бомбардиры и ассистенты</div>
+      <p class="lead">Считается вживую из сыгранных матчей ESPN (имена — из протоколов). Первый расчёт занимает пару секунд.</p>
+      <div id="scorers"></div>
     </div>
   </section>
 
@@ -977,6 +1157,14 @@
   <div class="pm-card glass">
     <button class="pm-x" id="nmClose" aria-label="Закрыть">✕</button>
     <div id="nmBody"></div>
+  </div>
+</div>
+
+<!-- team profile modal -->
+<div class="pm" id="teamModal">
+  <div class="pm-card glass">
+    <button class="pm-x" id="tmClose" aria-label="Закрыть">✕</button>
+    <div id="tmBody"></div>
   </div>
 </div>
 
@@ -1359,13 +1547,18 @@ const tables   =()=>_LTABLES|| TABLES;
 const groupGoals=()=>_LGG   || GROUP_GOALS;
 const favForm  =()=>_LFORM  || FORM;
 
+/* security: escape any untrusted external string before it touches innerHTML */
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+/* allow only http(s) URLs (blocks javascript:, data:, etc.) */
+function safeUrl(u){u=String(u||'').trim();return /^https?:\/\//i.test(u)?u:'';}
 function resolveTeam(t){
   let ab=t.abbreviation;
   if(!TEAMS[ab]){const n=(t.displayName||t.name||"").toLowerCase();if(NAME2ABBR[n])ab=NAME2ABBR[n];}
   const e=TEAMS[ab];
   if(e)return {ru:e.ru,g:e.g,abbr:ab};
-  return {ru:t.shortDisplayName||t.displayName||ab||"—",g:"",abbr:ab||""};
+  return {ru:esc(t.shortDisplayName||t.displayName||ab||"—"),g:"",abbr:ab||""};
 }
+const TEAM_ID={};   // abbr -> ESPN team id (filled from live data)
 function parseEvents(json){
   const out=[];
   (json.events||[]).forEach(e=>{
@@ -1374,12 +1567,14 @@ function parseEvents(json){
     const home=cs.find(x=>x.homeAway==='home'),away=cs.find(x=>x.homeAway==='away');
     if(!home||!away)return;
     const ht=resolveTeam(home.team),at=resolveTeam(away.team);
+    if(home.team&&home.team.id)TEAM_ID[ht.abbr]=home.team.id;
+    if(away.team&&away.team.id)TEAM_ID[at.abbr]=away.team.id;
     const tp=(c.status&&c.status.type)||{};
     const state=tp.state||'pre';
     const grp=(ht.g&&at.g&&ht.g===at.g)?ht.g:'';
     let city=(c.venue&&c.venue.address&&c.venue.address.city)||(c.venue&&c.venue.fullName)||'';
     city=city.split(',')[0].trim();
-    out.push({id:e.id,d:e.date,g:grp,h:ht.ru,a:at.ru,hAbbr:ht.abbr,aAbbr:at.abbr,v:cityRu(city),
+    out.push({id:e.id,d:e.date,g:grp,h:ht.ru,a:at.ru,hAbbr:ht.abbr,aAbbr:at.abbr,v:esc(cityRu(city)),
       state,hs:home.score,as:away.score,
       clock:state==='in'?((c.status&&c.status.displayClock)||tp.shortDetail||"LIVE"):'',
       winner:home.winner?'h':(away.winner?'a':null),
@@ -1489,7 +1684,7 @@ function matchHTML(m){
     mid= score?`<div class="score">${score}</div><span class="badge b-fin">Завершён</span>`
               :`<div class="ko">FT</div><span class="badge b-fin">Завершён</span>`;
   }else{
-    mid=`<div class="ko">${etTime(m.d)}</div><span class="badge b-soon">Скоро</span>`;
+    mid=`<div class="ko">${etTime(m.d)}</div><span class="badge b-soon ko-cd" data-cd="${new Date(m.d).getTime()}">${fmtCountdown(new Date(m.d)-Date.now())}</span>`;
   }
   const hb=m.winner==='h'?' style="opacity:1;font-weight:850"':'', ab=m.winner==='a'?' style="opacity:1;font-weight:850"':'';
   const grp=m.g?('Гр. '+m.g+' · '):(stageRu(m.round||m.r)?stageRu(m.round||m.r)+' · ':'');
@@ -1541,11 +1736,41 @@ function confettiHTML(){
     s+=`<span class="confetti" style="left:${l}vw;background:${c};animation-duration:${d}s;animation-delay:${dl}s;transform:rotate(${r}deg)"></span>`;}
   return s;
 }
+let SND_ON=(()=>{try{return localStorage.getItem('wc_snd')!=='0'}catch(e){return true}})();
+/* favourite teams + goal notifications */
+let FAV_TEAMS=(()=>{try{return new Set(JSON.parse(localStorage.getItem('wc_fav')||'[]'))}catch(e){return new Set()}})();
+let NOTIF_ON=(()=>{try{return localStorage.getItem('wc_notif')==='1'}catch(e){return false}})();
+function favSave(){try{localStorage.setItem('wc_fav',JSON.stringify([...FAV_TEAMS]))}catch(e){}}
+function toggleFav(ru){if(!ru)return;FAV_TEAMS.has(ru)?FAV_TEAMS.delete(ru):FAV_TEAMS.add(ru);favSave();renderTables();}
+function notifyGoal(team,score){
+  if(!NOTIF_ON||!('Notification'in window)||Notification.permission!=='granted')return;
+  try{const n=new Notification('⚽ ГОЛ! '+team,{body:team+' забивает · счёт '+score,icon:'https://otar989.github.io/chm2026/promo1.jpg',tag:'wc-goal'});
+    n.onclick=()=>{try{window.focus()}catch(e){}n.close();};}catch(e){}
+}
+function playGoal(){
+  if(!SND_ON)return;
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext; if(!AC)return;
+    const ac=new AC(), now=ac.currentTime;
+    // short referee whistle
+    const wo=ac.createOscillator(), wg=ac.createGain();
+    wo.type='square'; wo.frequency.setValueAtTime(2100,now); wo.frequency.setValueAtTime(2300,now+0.06);
+    wg.gain.setValueAtTime(0.0001,now); wg.gain.exponentialRampToValueAtTime(0.12,now+0.02); wg.gain.exponentialRampToValueAtTime(0.0001,now+0.22);
+    wo.connect(wg); wg.connect(ac.destination); wo.start(now); wo.stop(now+0.24);
+    // triumphant rising chord
+    [[523,0.28],[659,0.4],[784,0.52]].forEach(([f,t])=>{
+      const o=ac.createOscillator(), g=ac.createGain(); o.type='triangle'; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,now+t); g.gain.exponentialRampToValueAtTime(0.22,now+t+0.03); g.gain.exponentialRampToValueAtTime(0.0001,now+t+0.5);
+      o.connect(g); g.connect(ac.destination); o.start(now+t); o.stop(now+t+0.55);
+    });
+    setTimeout(()=>{try{ac.close()}catch(e){}},1600);
+  }catch(e){}
+}
 function celebrateGoal(m,side){
   const team=side==='h'?m.h:m.a;
   const fx=document.getElementById('goalFx'); if(!fx)return;
   fx.innerHTML=`<div class="gfx-card"><div class="gfx-big">⚽ ГОООЛ!</div><div class="gfx-team">${fl(team)} ${team}</div><div class="gfx-score">${m.hs} : ${m.as}</div></div>`+confettiHTML();
-  fx.classList.add('show');
+  fx.classList.add('show'); playGoal();
   clearTimeout(GOAL_T); GOAL_T=setTimeout(()=>fx.classList.remove('show'),5200);
 }
 function checkGoals(lives){
@@ -1764,7 +1989,7 @@ function renderNews(){
       const meta=n.when?`<div class="nmeta">${n.tag?n.tag+' · ':''}${n.when}${n.href?' · читать →':''}</div>`:'';
       return `<div class="glass ncard${n.href?' clk':''}" data-ni="${i}">
         <span class="ncat" style="background:${CAT_COLOR[n.c]||'#9aa3bd'}">${n.c}</span>
-        <h4>${n.t}</h4>${n.x?`<p>${n.x}</p>`:''}${meta}</div>`;
+        <h4>${esc(n.t)}</h4>${n.x?`<p>${esc(n.x)}</p>`:''}${meta}</div>`;
     }).join('') : `<div class="glass note">В этой категории сейчас нет новостей — выбери «Все».</div>`;
   }
 }
@@ -1774,11 +1999,21 @@ function trSave(){try{localStorage.setItem('wc_tr',JSON.stringify(TR_CACHE))}cat
 async function translate(text){
   if(!text)return text;
   if(TR_CACHE[text])return TR_CACHE[text];
+  const src=text.slice(0,1800);
+  // 1) Google translate (free gtx endpoint) — reliable + high quality, via proxy fallback
+  try{
+    const u='https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ru&dt=t&q='+encodeURIComponent(src);
+    const j=await fetchJSON(u);
+    if(Array.isArray(j)&&Array.isArray(j[0])){
+      const t=j[0].map(s=>s&&s[0]).filter(Boolean).join('');
+      if(t&&t.trim()){TR_CACHE[text]=t;trSave();return t;}
+    }
+  }catch(e){}
+  // 2) MyMemory fallback
   try{
     const r=await fetch('https://api.mymemory.translated.net/get?langpair=en|ru&q='+encodeURIComponent(text.slice(0,480)));
-    if(!r.ok)throw 0; const j=await r.json();
-    const t=j&&j.responseData&&j.responseData.translatedText;
-    if(t&&!/MYMEMORY|LIMIT|INVALID|PLEASE SELECT/i.test(t)){TR_CACHE[text]=t;trSave();return t;}
+    if(r.ok){const j=await r.json();const t=j&&j.responseData&&j.responseData.translatedText;
+      if(t&&!/MYMEMORY|LIMIT|INVALID|PLEASE SELECT/i.test(t)){TR_CACHE[text]=t;trSave();return t;}}
   }catch(e){}
   return text;
 }
@@ -1792,13 +2027,14 @@ function storyToParas(html){
 async function openNews(i){
   const it=NEWS_VIEW[i]; if(!it)return;
   const body=document.getElementById('nmBody');
+  const _img=esc(safeUrl(it.img)), _href=esc(safeUrl(it.href));
   body.innerHTML=`<span class="nm-cat" style="background:${CAT_COLOR[it.c]||'#9aa3bd'}">${it.c}</span>
-    <h3 class="nm-h">${it.t||it.tEn||''}</h3>
-    <div class="nm-meta">${it.tag?it.tag+' · ':''}${it.when||''}${it.byline?' · '+it.byline:''}</div>
-    ${it.img?`<img class="nm-img" src="${it.img}" alt="" loading="lazy">`:''}
-    <div class="nm-x" id="nmText">${it.x||it.xEn||''}</div>
+    <h3 class="nm-h">${esc(it.t||it.tEn||'')}</h3>
+    <div class="nm-meta">${it.tag?esc(it.tag)+' · ':''}${esc(it.when||'')}${it.byline?' · '+esc(it.byline):''}</div>
+    ${_img?`<img class="nm-img" src="${_img}" alt="" loading="lazy">`:''}
+    <div class="nm-x" id="nmText">${esc(it.x||it.xEn||'')}</div>
     <div id="nmFull"></div>
-    ${it.href?`<a class="nm-link" href="${it.href}" target="_blank" rel="noopener">Открыть оригинал на ESPN ↗</a>`:''}`;
+    ${_href?`<a class="nm-link" href="${_href}" target="_blank" rel="noopener noreferrer">Открыть оригинал на ESPN ↗</a>`:''}`;
   document.getElementById('newsModal').classList.add('show');
   const full=document.getElementById('nmFull');
   if(!it.aid){ // no full-article id — translate the short text at least
@@ -1812,7 +2048,7 @@ async function openNews(i){
     const paras=storyToParas(story);
     if(!paras.length){full.innerHTML='';return;}
     const sd=document.getElementById('nmText'); if(sd) sd.style.display='none';   // full text replaces short desc
-    full.innerHTML=paras.map((p,k)=>`<p id="np${k}">${p}</p>`).join('');          // English first
+    full.innerHTML=paras.map((p,k)=>`<p id="np${k}">${esc(p)}</p>`).join('');        // English first
     for(let k=0;k<paras.length;k++){                                              // translate progressively
       const t=await translate(paras[k]); const el=document.getElementById('np'+k);
       if(el&&t) el.textContent=t;
@@ -1821,6 +2057,33 @@ async function openNews(i){
   }catch(e){ full.innerHTML=''; }
 }
 function closeNews(){document.getElementById('newsModal').classList.remove('show');}
+/* ===== team profile ===== */
+function closeTeam(){document.getElementById('teamModal').classList.remove('show');}
+async function openTeam(ru){
+  const ab=nameAbbr(ru); const body=document.getElementById('tmBody'); if(!body)return;
+  const g=(TEAMS[ab]&&TEAMS[ab].g)||'—', power=POWER[ab]||'—';
+  body.innerHTML=`<div class="tm-head"><div class="tm-fl">${fl(ru)}</div><div class="tm-id"><h3>${ru}</h3><div class="tm-sub">Группа ${g} · сила ${power}/100</div></div></div><div id="tmBodyIn"><div class="glass note">Загружаю состав…</div></div>`;
+  document.getElementById('teamModal').classList.add('show');
+  const inb=()=>document.getElementById('tmBodyIn');
+  const id=TEAM_ID[ab];
+  if(!id){inb().innerHTML='<div class="glass note">Состав появится после загрузки живых данных (обнови страницу).</div>';return;}
+  try{
+    const j=await fetchJSON('https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/teams/'+id+'/roster');
+    const c=(j.coach&&j.coach[0])||{}; const coach=((c.firstName||'')+' '+(c.lastName||'')).trim();
+    const rec=j.team&&j.team.record&&j.team.record.items&&j.team.record.items[0]&&j.team.record.items[0].summary;
+    const ath=j.athletes||[];
+    const groups={'Вратари':[],'Защитники':[],'Полузащитники':[],'Нападающие':[]};
+    ath.forEach(a=>{const pos=posRu((a.position&&a.position.abbreviation)||(a.athlete&&a.athlete.position&&a.athlete.position.abbreviation));
+      const key=pos==='ВРТ'?'Вратари':pos==='ЗАЩ'?'Защитники':pos==='ПЗ'?'Полузащитники':'Нападающие';
+      const nm=a.displayName||(a.athlete&&a.athlete.displayName)||'';
+      const jr=a.jersey||(a.athlete&&a.athlete.jersey)||'';
+      if(nm)groups[key].push({nm,jr});});
+    let html=`<div class="tm-meta">${coach?`<span>👔 Тренер: <b>${esc(coach)}</b></span>`:''}${rec?`<span>📊 ${esc(rec)}</span>`:''}<span>👥 ${ath.length} игроков</span></div>`;
+    Object.entries(groups).forEach(([k,arr])=>{ if(!arr.length)return;
+      html+=`<div class="tm-pos">${k} · ${arr.length}</div><div class="tm-players">`+arr.map(p=>`<div class="tm-pl"><span class="tm-num">${esc(p.jr)}</span>${esc(p.nm)}</div>`).join('')+`</div>`;});
+    inb().innerHTML=html;
+  }catch(e){inb().innerHTML='<div class="glass note">Не удалось загрузить состав.</div>';}
+}
 const NEWS_URL="https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/news?limit=50";
 async function fetchNews(){
   const status=document.getElementById('newsStatus');
@@ -1838,7 +2101,7 @@ async function fetchNews(){
     renderNews();
     // translate headlines to Russian (cached, progressive re-render)
     let cnt=0;
-    for(const it of LIVE_NEWS){ it.t=await translate(it.tEn); if(++cnt%8===0) renderNews(); }
+    for(const it of LIVE_NEWS){ it.t=await translate(it.tEn); if(it.xEn) it.x=await translate(it.xEn); if(++cnt%5===0) renderNews(); }
     renderNews();
   }catch(e){
     LIVE_NEWS=null;
@@ -1916,6 +2179,12 @@ function evRu(type){
   if(t.includes('yellow'))return['🟨','Жёлтая карточка','card'];
   if(t.includes('substitution'))return['🔁','Замена','sub'];
   if(t.includes('var')||t.includes('review'))return['📺','Проверка VAR','var'];
+  if(/delay/.test(t))return null;                                   // noise — drop
+  if(/half[- ]?time/.test(t))return['⏸','Перерыв','period'];
+  if(/2nd half|second half|start 2nd/.test(t))return['▶️','Второй тайм','period'];
+  if(/kick ?-?off|first half|start 1st|match begins|1st half/.test(t))return['🟢','Начало матча','period'];
+  if(/full[- ]?time|end regular|final whistle|match ends|end 2nd|end of/.test(t))return['🏁','Финальный свисток','period'];
+  if(/penalt(y|ies) shootout|shoot-?out/.test(t))return['🥅','Серия пенальти','period'];
   return null;
 }
 const shortName=s=>{const p=(s||'').trim().split(/\s+/);return p[p.length-1]||'';};
@@ -1964,6 +2233,17 @@ function pitchHTML(m,hs,as,evs){
     </div>
   </div>`;
 }
+function posRu(p){p=(p||'').toUpperCase();
+  if(p[0]==='G')return'ВРТ';
+  if(p.includes('W')||p[0]==='F'||p.includes('ST')||p.includes('CF'))return'НАП';
+  if(p.includes('M'))return'ПЗ';
+  return'ЗАЩ';}
+function lineupCol(r){
+  if(!r||!(r.roster||[]).length)return'<div class="lu-empty">состав не объявлен</div>';
+  const st=(r.roster||[]).filter(p=>p.starter);
+  return `<div class="lu-form">схема ${r.formation||'—'}</div>`+st.map(p=>
+    `<div class="lu-row"><span class="lu-num">${esc(p.jersey||'')}</span><span class="lu-nm">${esc((p.athlete&&p.athlete.displayName)||'')}</span><span class="lu-pos">${posRu(p.position&&p.position.abbreviation)}</span></div>`).join('');
+}
 async function loadMatchDetail(m){
   const box=document.getElementById('mmDetail'); if(!box)return;
   try{
@@ -1975,20 +2255,22 @@ async function loadMatchDetail(m){
     const comp=j.header&&j.header.competitions&&j.header.competitions[0];
     let hs=m.state?m.hs:(m.s?m.s[0]:'0'), as=m.state?m.as:(m.s?m.s[1]:'0');
     if(comp){const cs=comp.competitors||[];const hc=cs.find(c=>c.homeAway==='home'),ac=cs.find(c=>c.homeAway==='away');if(hc&&hc.score!=null)hs=hc.score;if(ac&&ac.score!=null)as=ac.score;}
-    // key events (Russian, with player names, filtered, newest first)
+    // key events (Russian, with player names + assist, filtered, newest first)
     const evs=(j.keyEvents||[]).map(e=>{
       const map=evRu((e.type&&(e.type.text||e.type.abbreviation))||''); if(!map)return null;
+      let who=esc(evWho(e,map[2]));
+      if(map[2]==='goal'){const am=(e.text||'').match(/assist(?:ed)? by\s+([^.,]+?)(?:\s+with|\.|,|$)/i); if(am)who+=` <span class="ev2-as">(пас: ${esc(am[1].trim())})</span>`;}
       return {ic:map[0],ru:map[1],kind:map[2],side:idSide[e.team&&e.team.id]||'h',
-        min:(e.clock&&e.clock.displayValue)||'', who:evWho(e,map[2])};
+        min:(e.clock&&e.clock.displayValue)||'', who};
     }).filter(Boolean);
     const evHTML = evs.length
       ? `<div class="mm-sec">Голы и ключевые события</div>`+evs.slice().reverse().map(e=>
-          `<div class="ev2 ${e.kind}"><span class="ev2-min">${e.min}</span><span class="ev2-ic">${e.ic}</span><span class="ev2-tx"><b>${e.ru}</b>${e.who?' — <span class="ev2-who">'+e.who+'</span>':''}</span><span class="ev2-fl">${e.side==='h'?fl(m.h):fl(m.a)}</span></div>`).join('')
+          `<div class="ev2 ${e.kind}"><span class="ev2-min">${e.min}</span><span class="ev2-ic">${e.ic}</span><span class="ev2-tx"><b>${e.ru}</b>${e.who?' — <span class="ev2-who">'+e.who+'</span>':''}</span>${e.kind==='period'?'':'<span class="ev2-fl">'+(e.side==='h'?fl(m.h):fl(m.a))+'</span>'}</div>`).join('')
       : `<div class="mm-sec">События</div><div class="glass note">Ключевых событий пока нет — следи за матчем.</div>`;
     // "what's happening now" — latest commentary line (translated)
     const comm=j.commentary||[]; let nowTx='';
     if(comm.length){let last=comm[0];comm.forEach(c=>{if((c.sequence||0)>=(last.sequence||0))last=c;});nowTx=(last&&last.text)||'';}
-    const nowHTML = nowTx?`<div class="pitch-now" id="pitchNow">📣 ${nowTx}</div>`:'';
+    const nowHTML = nowTx?`<div class="pitch-now" id="pitchNow">📣 ${esc(nowTx)}</div>`:'';
     // stats
     const stat=(ti,name)=>{const s=((teams[ti]||{}).statistics||[]).find(x=>x.name===name);return s?s.displayValue:null;};
     const rows=[['possessionPct','Владение, %'],['totalShots','Удары'],['shotsOnTarget','В створ'],['wonCorners','Угловые'],['foulsCommitted','Фолы'],['yellowCards','Жёлтые карточки'],['totalPasses','Передачи']];
@@ -1997,9 +2279,31 @@ async function loadMatchDetail(m){
       const hh=parseFloat(hv)||0, aa=parseFloat(av)||0, tot=hh+aa||1, hp=Math.round(hh/tot*100);
       return `<div class="st-row"><span class="st-h">${hv??'-'}</span><div class="st-mid"><div class="st-lbl">${lbl}</div><div class="st-bar"><i style="width:${hp}%"></i></div></div><span class="st-a">${av??'-'}</span></div>`;
     }).join('') : '';
-    box.innerHTML = pitchHTML(m,hs,as,evs) + nowHTML + evHTML + statHTML;
-    // translate the live caption (single call, cached)
+    // lineups + formation
+    const rosters=j.rosters||[];
+    const rH=rosters.find(r=>r.homeAway==='home')||rosters.find(r=>r.team&&r.team.abbreviation===m.hAbbr)||rosters[0];
+    const rA=rosters.find(r=>r.homeAway==='away')||rosters.find(r=>r.team&&r.team.abbreviation===m.aAbbr)||rosters[1];
+    const lineupHTML = rosters.length? `<details class="mm-acc"><summary>📋 Составы и схема</summary><div class="lineups"><div class="lu"><div class="lu-team">${fl(m.h)} ${m.h}</div>${lineupCol(rH)}</div><div class="lu"><div class="lu-team">${fl(m.a)} ${m.a}</div>${lineupCol(rA)}</div></div></details>`:'';
+    // head-to-head (oriented to current teams)
+    const hid=(teams[HI]&&teams[HI].team&&teams[HI].team.id);
+    const h2hg=(j.headToHeadGames&&j.headToHeadGames[0]&&j.headToHeadGames[0].events)||[];
+    const h2hHTML = h2hg.length? `<details class="mm-acc"><summary>🆚 Очные встречи</summary>`+h2hg.slice(0,8).map(g=>{
+      const yr=(g.gameDate||'').slice(0,4);
+      const sc=g.homeTeamId===hid?`${g.homeTeamScore}:${g.awayTeamScore}`:`${g.awayTeamScore}:${g.homeTeamScore}`;
+      return `<div class="h2h-row"><span class="h2h-y">${esc(yr)}</span><span class="h2h-sc">${fl(m.h)} ${esc(sc)} ${fl(m.a)}</span><span class="h2h-l">${esc(g.leagueName||g.competitionName||'')}</span></div>`;
+    }).join('')+`</details>`:'';
+    // commentary feed (newest first, translated)
+    const commLines=(j.commentary||[]).slice().sort((a,b)=>(b.sequence||0)-(a.sequence||0)).slice(0,16);
+    const commHTML = commLines.length? `<details class="mm-acc"><summary>📝 Трансляция по минутам</summary><div class="comm">`+commLines.map((x,i)=>
+      `<div class="comm-row"><span class="comm-min">${esc((x.time&&x.time.displayValue)||'·')}</span><span class="comm-tx" id="cm${i}">${esc(x.text||'')}</span></div>`).join('')+`</div></details>`:'';
+
+    box.innerHTML = pitchHTML(m,hs,as,evs) + nowHTML + evHTML + statHTML + lineupHTML + h2hHTML + commHTML;
+    // translate live caption + commentary (cached)
     if(nowTx){const t=await translate(nowTx);const el=document.getElementById('pitchNow');if(el&&t)el.textContent='📣 '+t;}
+    for(let i=0;i<commLines.length;i++){
+      if(!document.getElementById('matchModal').classList.contains('show'))break;
+      const t=await translate(commLines[i].text); const el=document.getElementById('cm'+i); if(el&&t)el.textContent=t;
+    }
   }catch(e){ box.innerHTML=`<div class="glass note">Не удалось загрузить детали матча. Попробуй позже.</div>`; }
 }
 function renderPredictExtra(){
@@ -2147,7 +2451,7 @@ function renderTables(){
     const rows=grp.rows.map((r,i)=>
       `<tr class="${i<grp.q?'qual':''}">
         <td class="${i<grp.q?'pos':''}">${i+1}</td>
-        <td class="l team-cell"><span class="fl">${fl(r[0])}</span>${r[0]}</td>
+        <td class="l team-cell tm-clk" data-tm="${r[0]}"><span class="fl">${fl(r[0])}</span>${r[0]}</td>
         <td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td>
         <td>${r[5]>0?'+':''}${r[5]}</td><td class="pts">${r[6]}</td>
       </tr>`).join('');
@@ -2157,6 +2461,76 @@ function renderTables(){
   }).join('');
 }
 
+/* ===== playoff bracket simulator ===== */
+let BRK=null;
+function brkInit(){
+  const seeds=Object.keys(TEAMS).sort((a,b)=>(POWER[b]||0)-(POWER[a]||0)).slice(0,16).map(ab=>TEAMS[ab].ru);
+  const order=[0,15,7,8,4,11,3,12,5,10,2,13,6,9,1,14];
+  BRK={teams:order.map(i=>seeds[i]),round:0,picks:{},champion:null};
+}
+function brkRender(){
+  const el=document.getElementById('bracketSim'); if(!el)return;
+  if(!BRK)brkInit();
+  if(BRK.champion){
+    el.innerHTML=`<div class="brk-champ"><div class="brk-tro">🏆</div><div class="brk-clbl">ТВОЙ ЧЕМПИОН</div><div class="brk-cnm">${fl(BRK.champion)} ${BRK.champion}</div><button class="promo-btn ghost" id="brkReset">Начать заново</button></div>`;
+    return;
+  }
+  const names=['1/8 финала','1/4 финала','1/2 финала','Финал'];
+  const t=BRK.teams, pairs=[]; for(let i=0;i<t.length;i+=2)pairs.push([t[i],t[i+1]]);
+  const allPicked=pairs.every((_,i)=>BRK.picks[i]!=null);
+  el.innerHTML=`<div class="brk-round">${names[BRK.round]||'Раунд'} — выбери победителей (${Object.keys(BRK.picks).length}/${pairs.length})</div>`+
+    pairs.map((p,i)=>{const s=BRK.picks[i];
+      return `<div class="brk-pair"><button class="brk-team ${s===0?'win':s===1?'lose':''}" data-bp="${i}" data-bs="0"><span class="fl">${fl(p[0])}</span><span class="bt-nm">${p[0]}</span></button><span class="brk-vs">vs</span><button class="brk-team r ${s===1?'win':s===0?'lose':''}" data-bp="${i}" data-bs="1"><span class="bt-nm">${p[1]}</span><span class="fl">${fl(p[1])}</span></button></div>`;
+    }).join('')+
+    (allPicked?`<button class="promo-btn brk-next" id="brkNext">${BRK.round>=3?'🏆 Короновать чемпиона':'Следующий раунд →'}</button>`:'');
+}
+function brkAdvance(){
+  const t=BRK.teams, winners=[]; for(let i=0;i<t.length;i+=2){const s=BRK.picks[i/2];winners.push(s===1?t[i+1]:t[i]);}
+  if(winners.length===1){BRK.champion=winners[0];}
+  else{BRK.teams=winners;BRK.round++;BRK.picks={};}
+  brkRender();
+}
+/* ===== tables tab: groups | scorers ===== */
+let TABLES_VIEW='groups', SCORERS_BUILT=false;
+function renderTablesChips(){
+  const el=document.getElementById('tablesChips'); if(!el)return;
+  el.innerHTML=[['groups','Таблицы групп'],['scorers','⚽ Бомбардиры']].map(([k,l])=>
+    `<button class="chip ${k===TABLES_VIEW?'on':''}" data-tv="${k}">${l}</button>`).join('');
+  document.getElementById('tablesGroups').style.display = TABLES_VIEW==='groups'?'':'none';
+  document.getElementById('tablesScorers').style.display = TABLES_VIEW==='scorers'?'':'none';
+  if(TABLES_VIEW==='scorers'&&!SCORERS_BUILT){SCORERS_BUILT=true;buildScorers();}
+}
+async function buildScorers(){
+  const box=document.getElementById('scorers'); if(!box)return;
+  const fin=fixtures().filter(m=>stateKey(m)==='fin'&&m.id);
+  if(!fin.length){box.innerHTML='<div class="glass note">Сыгранных матчей пока нет.</div>';return;}
+  box.innerHTML='<div class="glass note">Считаю бомбардиров… сканирую '+fin.length+' матчей.</div>';
+  const cache=(()=>{try{return JSON.parse(localStorage.getItem('wc_goals')||'{}')}catch(e){return{}}})();
+  const todo=fin.filter(m=>!cache[m.id]);
+  for(let i=0;i<todo.length;i+=5){
+    await Promise.all(todo.slice(i,i+5).map(async m=>{
+      try{const j=await fetchJSON('https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary?event='+m.id);
+        cache[m.id]=(j.keyEvents||[]).filter(e=>/goal/i.test((e.type&&e.type.text)||'')).map(e=>{
+          const am=(e.text||'').match(/assist(?:ed)? by\s+([^.,]+?)(?:\s+with|\.|,|$)/i);
+          return {sc:evWho(e,'goal'),as:am?am[1].trim():'',tid:e.team&&e.team.id,own:/own goal/i.test((e.type&&e.type.text)||'')};
+        });
+      }catch(e){cache[m.id]=cache[m.id]||[];}
+    }));
+  }
+  try{localStorage.setItem('wc_goals',JSON.stringify(cache))}catch(e){}
+  const ID2ABBR={}; Object.entries(TEAM_ID).forEach(([ab,id])=>ID2ABBR[id]=ab);
+  const flT=tid=>{const ab=ID2ABBR[tid];return ab&&TEAMS[ab]?fl(TEAMS[ab].ru):'';};
+  const S={},A={};
+  Object.values(cache).forEach(gs=>gs.forEach(g=>{
+    if(g.sc&&!g.own){const k=g.sc+'|'+(g.tid||'');S[k]=S[k]||{n:g.sc,tid:g.tid,c:0};S[k].c++;}
+    if(g.as){const k=g.as+'|'+(g.tid||'');A[k]=A[k]||{n:g.as,tid:g.tid,c:0};A[k].c++;}
+  }));
+  const topS=Object.values(S).sort((a,b)=>b.c-a.c).slice(0,15);
+  const topA=Object.values(A).sort((a,b)=>b.c-a.c).slice(0,10);
+  const row=(p,i)=>`<div class="sc-row"><span class="sc-rk ${i===0?'top':''}">${i+1}</span><span class="sc-fl">${flT(p.tid)}</span><span class="sc-nm">${esc(p.n)}</span><span class="sc-c">${p.c}</span></div>`;
+  box.innerHTML=`<div class="cards-2"><div class="glass sc-card"><h4>⚽ Бомбардиры</h4>${topS.length?topS.map(row).join(''):'<div class="glass note">Голов пока нет.</div>'}</div>`+
+    `<div class="glass sc-card"><h4>🅰️ Ассистенты</h4>${topA.length?topA.map(row).join(''):'<div class="glass note">Данных по ассистам пока мало.</div>'}</div></div>`;
+}
 /* ===== Dashboard ===== */
 function daysToFinal(){const f=new Date('2026-07-19T18:00:00-04:00');return Math.max(0,Math.ceil((f-new Date())/86400000));}
 function countUp(el,to,dur,dec){
@@ -2316,6 +2690,7 @@ function activate(v){
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v===v));
   document.querySelectorAll('.bnav').forEach(t=>t.classList.toggle('active',t.dataset.v===v));
   const hero=document.getElementById('hero'); if(hero) hero.style.display = v==='dash'?'':'none';
+  const promo=document.getElementById('promo'); if(promo) promo.style.display = v==='dash'?'':'none';
   renderSectionHero(v);
   if(v==='dash') animateDash();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -2329,6 +2704,14 @@ document.getElementById('bottombar').addEventListener('click',e=>{
 document.getElementById('newsChips').addEventListener('click',e=>{
   const c=e.target.closest('.chip'); if(c){NEWS_FILTER=c.dataset.c;renderNews();}
 });
+document.getElementById('tables').addEventListener('click',e=>{
+  const c=e.target.closest('.tm-clk'); if(c&&c.dataset.tm) openTeam(c.dataset.tm);
+});
+document.getElementById('tablesChips').addEventListener('click',e=>{
+  const c=e.target.closest('.chip'); if(c){TABLES_VIEW=c.dataset.tv;renderTablesChips();}
+});
+document.getElementById('tmClose').addEventListener('click',closeTeam);
+document.getElementById('teamModal').addEventListener('click',e=>{if(e.target.id==='teamModal')closeTeam();});
 document.getElementById('newsGrid').addEventListener('click',e=>{
   const card=e.target.closest('.ncard.clk'); if(card&&card.dataset.ni!=null) openNews(+card.dataset.ni);
 });
@@ -2355,8 +2738,14 @@ document.getElementById('matchModal').addEventListener('click',e=>{if(e.target.i
 // news detail modal
 document.getElementById('nmClose').addEventListener('click',closeNews);
 document.getElementById('newsModal').addEventListener('click',e=>{if(e.target.id==='newsModal')closeNews();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePlayer();closeMatch();closeNews();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePlayer();closeMatch();closeNews();closeTeam();}});
 document.getElementById('heroSide').addEventListener('click',()=>activate('predict'));
+document.getElementById('promo').addEventListener('click',e=>{const b=e.target.closest('.promo-btn');if(b&&b.dataset.v)activate(b.dataset.v);});
+document.getElementById('bracketSim').addEventListener('click',e=>{
+  const t=e.target.closest('.brk-team'); if(t){BRK.picks[+t.dataset.bp]=+t.dataset.bs;brkRender();return;}
+  if(e.target.closest('#brkNext')){brkAdvance();return;}
+  if(e.target.closest('#brkReset')){brkInit();brkRender();return;}
+});
 
 /* hero side card — title favourites */
 function renderHeroInfo(){
@@ -2369,6 +2758,14 @@ function renderHeroInfo(){
       <span class="hf-bar"><i style="width:${(f[1]/max*100).toFixed(0)}%"></i></span>
       <span class="hf-pct">${f[1]}%</span>
     </div>`).join('');
+}
+// countdown formatter: "Ч:ММ:СС" (<24ч) or "N дн H ч"
+function fmtCountdown(ms){
+  if(ms<=0) return 'скоро';
+  const s=Math.floor(ms/1000), d=Math.floor(s/86400), h=Math.floor(s%86400/3600), m=Math.floor(s%3600/60), sec=s%60;
+  const p=n=>String(n).padStart(2,'0');
+  if(d>=1) return `${d} дн ${h} ч`;
+  return `${h}:${p(m)}:${p(sec)}`;
 }
 /* hero live/next-match strip */
 function renderHeroLive(){
@@ -2387,12 +2784,10 @@ function renderHeroLive(){
   const now=new Date();
   const next=FX.filter(m=>new Date(m.d)>now).sort((a,b)=>new Date(a.d)-new Date(b.d))[0];
   if(next){
-    const diff=new Date(next.d)-now, hrs=Math.floor(diff/3600000), mins=Math.floor(diff%3600000/60000);
-    const inTxt=hrs>24?`${Math.floor(hrs/24)} дн`:(hrs>0?`через ${hrs} ч ${mins} мин`:`через ${mins} мин`);
     el.className='hero-live';
-    el.innerHTML=`<span class="hl-tag">⏱ след. матч</span>`+
+    el.innerHTML=`<span class="hl-tag">⏱ до матча</span>`+
       `<span class="hl-m">${fl(next.h)} ${next.h} — ${next.a} ${fl(next.a)}</span>`+
-      `<span class="hl-c">${inTxt}</span>`;
+      `<span class="hl-c cd" data-cd="${new Date(next.d).getTime()}">${fmtCountdown(new Date(next.d)-Date.now())}</span>`;
   }else{el.className='hero-live';el.innerHTML='';}
 }
 /* clock */
@@ -2404,7 +2799,16 @@ function tick(){
 }
 // dynamic date stamp
 (function(){const el=document.getElementById('dateStamp');if(el)el.textContent=new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});})();
-renderSchedule();renderFavs();renderBets();renderTables();renderDashboard();renderStars();renderPredictExtra();renderInsights();renderNews();renderHeroInfo();tick();
+// sound toggle + share
+(function(){
+  const sb=document.getElementById('sndBtn'); if(sb){const upd=()=>sb.textContent=SND_ON?'🔊':'🔇';upd();
+    sb.addEventListener('click',()=>{SND_ON=!SND_ON;try{localStorage.setItem('wc_snd',SND_ON?'1':'0')}catch(e){}upd();if(SND_ON)playGoal();});}
+  const shb=document.getElementById('shareBtn'); if(shb) shb.addEventListener('click',async()=>{
+    const d={title:'ЧМ-2026 · всё о турнире',text:'Живой счёт, прогнозы, звёзды и новости ЧМ-2026 — на русском',url:'https://otar989.github.io/chm2026/'};
+    try{ if(navigator.share){await navigator.share(d);} else {await navigator.clipboard.writeText(d.url);shb.textContent='✓';setTimeout(()=>shb.textContent='🔗',1500);} }catch(e){}
+  });
+})();
+renderSchedule();renderFavs();renderBets();renderTables();renderTablesChips();renderDashboard();renderStars();renderPredictExtra();renderInsights();renderNews();renderHeroInfo();brkRender();tick();
 // hero count-up
 document.querySelectorAll('.hero-stats .cu').forEach(el=>countUp(el,+el.dataset.to,1300));
 // kick off dashboard animations
@@ -2416,6 +2820,9 @@ fetchNews();                       // pull live ESPN headlines
 function tickClock(){
   document.querySelectorAll('.lc-min[data-key],.hl-c[data-key]').forEach(el=>{
     const m=MATCH_REG[el.dataset.key]; if(m) el.textContent=liveClockStr(m);
+  });
+  document.querySelectorAll('[data-cd]').forEach(el=>{
+    el.textContent=fmtCountdown(+el.dataset.cd-Date.now());
   });
 }
 setInterval(tickClock,1000);
